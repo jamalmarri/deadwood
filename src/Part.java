@@ -59,6 +59,7 @@ public class Part {
      * This can be helpful for ensuring two players can't get the same part.
      *
      * @return the player object associated with this part.
+     * @see Player
      */
     public Player getPlayerOnPart() {
         return playerOnPart;
@@ -70,6 +71,7 @@ public class Part {
      * the player object.
      *
      * @param playerOnPart the player object to be assigned to this part.
+     * @see Player
      */
     public void setPlayerOnPart(Player playerOnPart) {
         this.playerOnPart = playerOnPart;
