@@ -18,6 +18,7 @@ public class Room {
      *
      * @param name      the name of this Room to be displayed to the user.
      * @param neighbors the neighboring Rooms of this Room.
+     * @see HashSet
      */
     public Room(String name, HashSet<Room> neighbors) {
         this.name = name;
