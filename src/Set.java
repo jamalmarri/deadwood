@@ -64,21 +64,17 @@ public class Set extends Room {
     public int getTakesLeft() {
         return takesLeft;
     }
-    
+
     /**
      * Sets the takes that are left on this Set,
      * for when a Player successfully acts.
      */
     public void setTakesLeft(int takesLeft) {
-    	this.takesLeft = takesLeft;
+        this.takesLeft = takesLeft;
     }
 
-    /**
-     * Resets the takes that are left on this Set,
-     * usually at the end of a scene on a Card.
-     */
-    public void resetTakesLeft() {
-        this.takesLeft = this.defaultTakes;
+    public int getDefaultTakes() {
+        return defaultTakes;
     }
 
     /**
