@@ -70,11 +70,12 @@ public class Player {
     public void setActing(boolean acting) {
         isActing = acting;
     }
+
     public boolean isOnCard() {
         return isOnCard;
     }
 
-    public void setIsOnCard(boolean onCard) {
+    public void setOnCard(boolean onCard) {
         isOnCard = onCard;
     }
 }
