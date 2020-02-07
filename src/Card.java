@@ -25,7 +25,8 @@ public class Card {
      * @param sceneNumber the scene number of this Card to be displayed to the user.
      * @param description the description of this Card to be displayed to the user.
      * @param budget      the budget of this Card to be used for acting and bonus payouts.
-     * @param parts       the HashSet of parts that this Card contains.
+     * @param parts       the HashSet of Parts that this Card contains.
+     * @see HashSet
      */
     public Card(String name, int sceneNumber, String description, int budget, HashSet<Part> parts) {
         this.name = name;
