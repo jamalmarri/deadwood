@@ -178,8 +178,16 @@ public class Deadwood {
         }
     }
 
+    private static int checkForBonusMoney(Player player) {
+        return 0;
+    }
+
     private static int upgrade(Player player) {
         return 0;
+    }
+
+    private static void resetDay() {
+        return;
     }
 
     private static void tallyScores() {
