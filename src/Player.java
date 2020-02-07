@@ -3,6 +3,7 @@ public class Player {
     private int dollars;
     private int credits;
     private int rank;
+    private boolean isActing;
     private int timesRehearsedThisScene;
 
     public Player() {
@@ -59,5 +60,13 @@ public class Player {
 
     public int getScore() {
         return (rank * 5) + dollars + credits;
+    }
+
+    public boolean isActing() {
+        return isActing;
+    }
+
+    public void setActing(boolean acting) {
+        isActing = acting;
     }
 }
