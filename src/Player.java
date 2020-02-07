@@ -4,6 +4,7 @@ public class Player {
     private int credits;
     private int rank;
     private boolean isActing;
+    private boolean isOnCard;
     private int timesRehearsedThisScene;
 
     public Player() {
@@ -68,5 +69,12 @@ public class Player {
 
     public void setActing(boolean acting) {
         isActing = acting;
+    }
+    public boolean isOnCard() {
+        return isOnCard;
+    }
+
+    public void setIsOnCard(boolean onCard) {
+        isOnCard = onCard;
     }
 }
