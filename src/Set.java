@@ -2,9 +2,9 @@ import java.util.HashSet;
 
 /**
  * Represents a Set on the board of the game.
- * There are 10 of these sets, each with their
- * own name, Card, and parts that the Player can
- * interact with. This is a child of the Room
+ * There are 10 of these Sets, each with their
+ * own name, Card, and Parts that the Player can
+ * interact with. This is a child class of the Room
  * class, as it represents a specific type of Room.
  *
  * @author Jamal Marri
@@ -22,10 +22,11 @@ public class Set extends Room {
     /**
      * Class constructor.
      *
-     * @param name         the name of this Card to be displayed to the user.
-     * @param neighbors    the neighboring Rooms of this Card.
-     * @param defaultTakes the default amount of takes for this Card for resetting takes between movies.
-     * @param parts        the name of this Card to be displayed to the user.
+     * @param name         the name of this Set to be displayed to the user.
+     * @param neighbors    the neighboring Rooms of this Set.
+     * @param defaultTakes the default amount of takes for this Set used for resetting takes between movies.
+     * @param parts        the HashSet of Parts that this Set contains.
+     * @see HashSet
      */
     public Set(String name, HashSet<Room> neighbors, int defaultTakes, HashSet<Part> parts) {
         super(name, neighbors);
