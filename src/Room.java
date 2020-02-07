@@ -12,6 +12,7 @@ import java.util.HashSet;
 public class Room {
     private final String name;
     private final HashSet<Room> neighbors;
+    private HashSet<Player> players;
 
     /**
      * Class constructor.
@@ -43,5 +44,13 @@ public class Room {
      */
     public HashSet<Room> getNeighbors() {
         return neighbors;
+    }
+
+    public HashSet<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(HashSet<Player> players) {
+        this.players = players;
     }
 }
