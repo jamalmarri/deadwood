@@ -156,11 +156,20 @@ public class Deadwood {
         int budget = currentSet.getCard().getBudget();
         int target = budget - player.getTimesRehearsedThisScene();
         int roll = Dice.roll(1)[0];
+        //TODO: Tell player the results of their acting roll
         if (roll >= target) {
-            //TODO: Acting success behavior
+            currentSet.setTakesLeft(currentSet.getTakesLeft() - 1);
+        	if (player.isOnCard()) {
+            	player.setDollars(2 + player.getDollars());
+            } else {
+            	player.setDollars(1 + player.getDollars());
+            	player.setCredits(1 + player.getCredits());
+            }
             return 0;
         } else {
-            //TODO: Acting failure behavior
+            if (!player.isOnCard()) {
+            	player.setDollars(1 + player.getDollars());
+            }
             return 2;
         }
     }
