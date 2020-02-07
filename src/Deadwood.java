@@ -15,7 +15,6 @@ public class Deadwood {
 
     public static void main(String[] args) {
         init();
-        String input;
         while (gameIsRunning) {
             for (int i = 0; i < players.length; i++) {
                 tick(players[i], i + 1);
@@ -66,7 +65,7 @@ public class Deadwood {
         trailer = new Room("Trailer", new HashSet<>());
         castingOffice = new Room("Casting Office", new HashSet<>());
 
-        // TODO: Establish all neighbor relations
+        linkRooms();
 
         // Initialize player objects based on amount of players
         for (int i = 0; i < players.length; i++) {
@@ -92,6 +91,11 @@ public class Deadwood {
         gameIsRunning = true;
     }
 
+    private static void linkRooms() {
+        // TODO: Establish all neighbor relations
+        return;
+    }
+
     private static void tick(Player player, int playerNumber) {
         // Print player's information
         System.out.println("Player " + playerNumber + " | Rank: " + player.getRank() + " | Dollars: " + player.getDollars() +
@@ -104,9 +108,65 @@ public class Deadwood {
         }
         System.out.println();
 
-        //TODO: Actual game logic HERE
+        int inputCode = getInput();
+
+        //TODO: Actual game logic
+
         // This is a placeholder to stop the game from looping infinitely.
         daysLeft = players.length - playerNumber;
+    }
+
+    private static int getInput() {
+        //TODO: Process input
+        return 0;
+    }
+
+    private static int move(Player player, Room newRoom) {
+        return 0;
+    }
+
+    private static int takePart(Player player) {
+        return 0;
+    }
+
+    private static int rehearse(Player player) {
+        if (!(player.getCurrentRoom() instanceof Set) && player.isActing()) {
+            //TODO: Warn user of illegal move
+            return 1;
+        }
+
+        Set currentSet = (Set) player.getCurrentRoom();
+        int budget = currentSet.getCard().getBudget();
+        if ((player.getTimesRehearsedThisScene() - budget) < 1) {
+            //TODO: Warn user of unnecessary move
+            return 2;
+        }
+
+        player.setTimesRehearsedThisScene(player.getTimesRehearsedThisScene() + 1);
+        return 0;
+    }
+
+    private static int act(Player player) {
+        if (!(player.getCurrentRoom() instanceof Set) && player.isActing()) {
+            //TODO: Warn user of illegal move
+            return 1;
+        }
+
+        Set currentSet = (Set) player.getCurrentRoom();
+        int budget = currentSet.getCard().getBudget();
+        int target = budget - player.getTimesRehearsedThisScene();
+        int roll = Dice.roll(1)[0];
+        if (roll >= target) {
+            //TODO: Acting success behavior
+            return 0;
+        } else {
+            //TODO: Acting failure behavior
+            return 2;
+        }
+    }
+
+    private static int upgrade(Player player) {
+        return 0;
     }
 
     private static void tallyScores() {
