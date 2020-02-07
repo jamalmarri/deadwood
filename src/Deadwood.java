@@ -132,14 +132,14 @@ public class Deadwood {
     private static int rehearse(Player player) {
         if (!(player.getCurrentRoom() instanceof Set) && player.isActing()) {
             //TODO: Warn user of illegal move
-            return 1;
+            return -1;
         }
 
         Set currentSet = (Set) player.getCurrentRoom();
         int budget = currentSet.getCard().getBudget();
         if ((player.getTimesRehearsedThisScene() - budget) < 1) {
             //TODO: Warn user of unnecessary move
-            return 2;
+            return 1;
         }
 
         player.setTimesRehearsedThisScene(player.getTimesRehearsedThisScene() + 1);
@@ -149,7 +149,7 @@ public class Deadwood {
     private static int act(Player player) {
         if (!(player.getCurrentRoom() instanceof Set) && player.isActing()) {
             //TODO: Warn user of illegal move
-            return 1;
+            return -1;
         }
 
         Set currentSet = (Set) player.getCurrentRoom();
@@ -159,18 +159,22 @@ public class Deadwood {
         //TODO: Tell player the results of their acting roll
         if (roll >= target) {
             currentSet.setTakesLeft(currentSet.getTakesLeft() - 1);
-        	if (player.isOnCard()) {
-            	player.setDollars(2 + player.getDollars());
+            if (player.isOnCard()) {
+                player.setDollars(2 + player.getDollars());
+                return 0;
             } else {
-            	player.setDollars(1 + player.getDollars());
-            	player.setCredits(1 + player.getCredits());
+                player.setDollars(1 + player.getDollars());
+                player.setCredits(1 + player.getCredits());
+                return 1;
             }
-            return 0;
+
         } else {
             if (!player.isOnCard()) {
-            	player.setDollars(1 + player.getDollars());
+                player.setDollars(1 + player.getDollars());
+                return 2;
+            } else {
+                return 3;
             }
-            return 2;
         }
     }
 
