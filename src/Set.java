@@ -73,6 +73,13 @@ public class Set extends Room {
         this.takesLeft = takesLeft;
     }
 
+    /**
+     * Gets the default amount of takes for this Set, which
+     * is very useful for resetting the number of takes left
+     * at the end of a movie.
+     *
+     * @return the default number of takes for this Set.
+     */
     public int getDefaultTakes() {
         return defaultTakes;
     }
