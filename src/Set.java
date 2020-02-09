@@ -68,6 +68,8 @@ public class Set extends Room {
     /**
      * Sets the takes that are left on this Set,
      * for when a Player successfully acts.
+     *
+     * @param takesLeft the new number of takes left on this Set.
      */
     public void setTakesLeft(int takesLeft) {
         this.takesLeft = takesLeft;
