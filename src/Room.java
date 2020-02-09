@@ -24,6 +24,7 @@ public class Room {
     public Room(String name, HashSet<Room> neighbors) {
         this.name = name;
         this.neighbors = neighbors;
+        players = new HashSet<>();
     }
 
     /**
@@ -46,11 +47,24 @@ public class Room {
         return neighbors;
     }
 
+    /**
+     * Gets the HashSet of this Room's players, for checking
+     * what Players are currently in this Room.
+     *
+     * @return the HashSet of Players for this Room
+     * @see HashSet
+     */
     public HashSet<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(HashSet<Player> players) {
-        this.players = players;
+    /**
+     * Adds the inputted Player into the 'players' HashSet, for when
+     * a Player enters this Room.
+     *
+     * @param player the new Player to add to the 'players' HashSet.
+     */
+    public void addPlayer(Player player) {
+        players.add(player);
     }
 }
