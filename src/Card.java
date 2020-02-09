@@ -68,18 +68,18 @@ public class Card {
      * successfully acted on their part, and to determine the amount
      * of dice to roll in the event of a bonus payout.
      *
-     * @return the budget of the Card.
+     * @return the budget of this Card.
      */
     public int getBudget() {
         return budget;
     }
 
     /**
-     * Gets the HashSet of part objects associated with the Card.
+     * Gets the HashSet of part objects associated with this Card.
      * This is useful for determining all of the Players who are
      * applicable to a bonus payout.
      *
-     * @return the HashSet of parts that the Card contains.
+     * @return the HashSet of parts that this Card contains.
      * @see HashSet
      */
     public HashSet<Part> getParts() {
