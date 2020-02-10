@@ -59,6 +59,16 @@ public class Room {
     }
 
     /**
+     * Adds the inputted Room into the 'neighbors' HashSet, for when
+     * the game connects all Rooms together.
+     *
+     * @param neighbor the new Room to add to the 'neighbors' HashSet.
+     */
+    public void addNeighbor(Room neighbor) {
+        neighbors.add(neighbor);
+    }
+
+    /**
      * Adds the inputted Player into the 'players' HashSet, for when
      * a Player enters this Room.
      *
@@ -66,5 +76,15 @@ public class Room {
      */
     public void addPlayer(Player player) {
         players.add(player);
+    }
+
+    /**
+     * Removes the inputted Player from the 'players' HashSet, for when
+     * a Player leaves this Room.
+     *
+     * @param player the Player to remove from the 'players' HashSet.
+     */
+    public void removePlayer(Player player) {
+        players.remove(player);
     }
 }
