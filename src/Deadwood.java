@@ -1,15 +1,13 @@
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class Deadwood {
-    private static Scanner scan;
+    private static final Controller controller = new Controller();
     private static Player[] players;
     private static ArrayList<Card> deck;
     private static int scenesLeft;
     private static int daysLeft;
-    private static Room trailer;
+    private static Room trailers;
     private static Room castingOffice;
     private static boolean gameIsRunning;
 
@@ -28,31 +26,11 @@ public class Deadwood {
     }
 
     private static void init() {
-        // Initialize Scanner for reading user input
-        scan = new Scanner(System.in);
-        System.out.print("Enter number of players [2-8]: ");
-        int playerCount = 0;
-
-        // Request correct input until it is received
-        while (playerCount < 2 | playerCount > 8) {
-            try {
-                playerCount = scan.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.print("Invalid input. Please try again: ");
-                scan.next();
-                continue;
-            }
-            if (!(playerCount >= 2 && playerCount <= 8)) {
-                System.out.print("Invalid amount of players [2-8]. Please try again: ");
-            }
-        }
-
-        // Close Scanner
-        scan.close();
+        // Get number of players from user input
+        int playerCount = controller.getInput(0);
 
         // Initialize array of playerCount players
         players = new Player[playerCount];
-        System.out.println("Players: " + players.length);
 
         // Establish how many days will pass based on amount of players
         if (players.length <= 3) {
@@ -62,8 +40,9 @@ public class Deadwood {
         }
 
         // Initialize root Rooms
-        trailer = new Room("Trailer", new HashSet<>());
+        trailers = new Room("Trailers", new HashSet<>());
         castingOffice = new Room("Casting Office", new HashSet<>());
+        trailers.addNeighbor(castingOffice);
 
         linkRooms();
 
@@ -84,10 +63,10 @@ public class Deadwood {
                     players[i] = new Player();
                     break;
             }
-            players[i].setCurrentRoom(trailer);
         }
 
         scenesLeft = 10;
+        resetDay();
         gameIsRunning = true;
     }
 
@@ -97,31 +76,38 @@ public class Deadwood {
     }
 
     private static void tick(Player player, int playerNumber) {
-        // Print player's information
-        System.out.println("Player " + playerNumber + " | Rank: " + player.getRank() + " | Dollars: " + player.getDollars() +
-                " | Credits: " + player.getCredits() + " | Current Space: " + player.getCurrentRoom().getName());
 
-        // Print neighboring rooms of player's current room
-        System.out.print("Neighboring rooms:");
-        for (Room neighbor : player.getCurrentRoom().getNeighbors()) {
-            System.out.print(" " + neighbor.getName());
+        controller.writePrompt(player, playerNumber);
+        int inputCode = controller.getInput(1);
+
+        switch(inputCode) {
+            case 0:
+                controller.writeResponse(inputCode, move(player));
+                break;
+            case 1:
+                controller.writeResponse(inputCode, takePart(player));
+                break;
+            case 2:
+                controller.writeResponse(inputCode, rehearse(player));
+                break;
+            case 3:
+                controller.writeResponse(inputCode, act(player));
+                break;
+            case 4:
+                controller.writeResponse(inputCode, upgrade(player));
+                break;
+            default:
+                break;
         }
-        System.out.println();
-
-        int inputCode = getInput();
-
-        //TODO: Actual game logic
 
         // This is a placeholder to stop the game from looping infinitely.
         daysLeft = players.length - playerNumber;
     }
 
-    private static int getInput() {
-        //TODO: Process input
-        return 0;
-    }
-
-    private static int move(Player player, Room newRoom) {
+    private static int move(Player player) {
+        player.getCurrentRoom().removePlayer(player);
+        player.setCurrentRoom(controller.getRoom(player));
+        player.getCurrentRoom().addPlayer(player);
         return 0;
     }
 
@@ -131,14 +117,12 @@ public class Deadwood {
 
     private static int rehearse(Player player) {
         if (!(player.getCurrentRoom() instanceof Set) && player.isActing()) {
-            //TODO: Warn user of illegal move
             return -1;
         }
 
         Set currentSet = (Set) player.getCurrentRoom();
         int budget = currentSet.getCard().getBudget();
         if ((player.getTimesRehearsedThisScene() - budget) < 1) {
-            //TODO: Warn user of unnecessary move
             return 1;
         }
 
@@ -148,7 +132,6 @@ public class Deadwood {
 
     private static int act(Player player) {
         if (!(player.getCurrentRoom() instanceof Set) && player.isActing()) {
-            //TODO: Warn user of illegal move
             return -1;
         }
 
@@ -156,9 +139,11 @@ public class Deadwood {
         int budget = currentSet.getCard().getBudget();
         int target = budget - player.getTimesRehearsedThisScene();
         int roll = Dice.roll(1)[0];
-        //TODO: Tell player the results of their acting roll
         if (roll >= target) {
             currentSet.setTakesLeft(currentSet.getTakesLeft() - 1);
+            if (currentSet.getTakesLeft() < 1) {
+                scenesLeft--;
+            }
             if (player.isOnCard()) {
                 player.setDollars(2 + player.getDollars());
                 return 0;
@@ -187,7 +172,10 @@ public class Deadwood {
     }
 
     private static void resetDay() {
-        return;
+        for (int i = 0; i < players.length; i++) {
+            players[i].setCurrentRoom(trailers);
+        }
+        //TODO: Deal out cards
     }
 
     private static void tallyScores() {
@@ -195,11 +183,6 @@ public class Deadwood {
         for (int i = 0; i < players.length; i++) {
             scores[i] = players[i].getScore();
         }
-        System.out.println("Game Over!");
-        System.out.println("Scores:");
-        for (int i = 0; i < scores.length; i++) {
-            System.out.println("Player " + (i + 1) + ": " + scores[i]);
-        }
-
+        controller.writeScores(scores);
     }
 }
