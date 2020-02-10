@@ -14,6 +14,7 @@ public class Player {
     private int rank;
     private boolean isActing;
     private boolean isOnCard;
+    private Part currentPart;
     private int timesRehearsedThisScene;
 
     /**
@@ -179,6 +180,27 @@ public class Player {
      */
     public void setOnCard(boolean onCard) {
         isOnCard = onCard;
+    }
+
+    /**
+     * Gets this Player's current Part, used to determine what their
+     * payout will be for successfully acting and to check for a bonus
+     * payout.
+     *
+     * @return this Player's current Part.
+     */
+    public Part getCurrentPart() {
+        return currentPart;
+    }
+
+    /**
+     * Sets this Player's current Part, used when the Player takes a new
+     * Part from a Set or Card.
+     *
+     * @param currentPart the new Part for this Player.
+     */
+    public void setCurrentPart(Part currentPart) {
+        this.currentPart = currentPart;
     }
 
     /**
