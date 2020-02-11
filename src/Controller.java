@@ -26,6 +26,7 @@ public class Controller {
     }
 
     public void writeResponse(int action, int outputType) {
+        writeln("");
         switch (action) {
             case 0:
                 switch (outputType) {
@@ -33,7 +34,7 @@ public class Controller {
                         writeln("You cannot move rooms while in a movie.");
                         break;
                     case 0:
-                        writeln("You moved to new room!");
+                        writeln("You moved to a new room!");
                         break;
                     default:
                         break;
@@ -140,7 +141,6 @@ public class Controller {
     }
 
     private int getPlayerCount() {
-        // Initialize Scanner for reading user input
         write("Enter number of players [2-8]: ");
         int playerCount = 0;
 
@@ -148,21 +148,22 @@ public class Controller {
         while (playerCount < 2 | playerCount > 8) {
             try {
                 playerCount = scan.nextInt();
+                scan.nextLine();
             } catch (InputMismatchException e) {
+                writeln("");
                 write("Invalid input. Please try again: ");
-                scan.next();
                 continue;
             }
             if (!(playerCount >= 2 && playerCount <= 8)) {
+                writeln("");
                 write("Invalid amount of players [2-8]. Please try again: ");
             }
         }
-
-        scan.nextLine();
         return playerCount;
     }
 
     private int getPlayerAction() {
+        writeln("");
         writeln("What would you like to do?");
         writeln("(move, take, rehearse, act, upgrade)");
         String input;
@@ -180,6 +181,7 @@ public class Controller {
                 case "upgrade":
                     return 4;
                 default:
+                    writeln("");
                     write("Invalid action. Please try again: ");
                     break;
             }
@@ -187,6 +189,7 @@ public class Controller {
     }
 
     public Room getRoom(Player player) {
+        writeln("");
         writeln("Which room would you like to move to?");
         // Print neighboring rooms of player's current room
         write("Neighboring rooms:");
@@ -202,11 +205,13 @@ public class Controller {
                     return neighbor;
                 }
             }
+            writeln("");
             write("Invalid room name. Please try again: ");
         }
     }
 
     public Part getPart(Player player) {
+        writeln("");
         writeln("Which part would you like to take?");
 
         writeln("On the card:");
@@ -229,6 +234,7 @@ public class Controller {
                         player.setOnCard(true);
                         return part;
                     } else {
+                        writeln("");
                         write("You are not a high enough rank for that part. Please try again: ");
                     }
                 }
@@ -239,16 +245,19 @@ public class Controller {
                         player.setOnCard(false);
                         return part;
                     } else {
+                        writeln("");
                         write("You are not a high enough rank for that part. Please try again: ");
                     }
                 }
             }
+            writeln("");
             write("Invalid part name. Please try again: ");
         }
     }
 
     public int getRank(Player player) {
         int rank = player.getRank();
+        writeln("");
         writeln("What rank would you like to upgrade to? You are currently rank " + rank + ". Enter your current rank to cancel.");
         for (int i = 0; i < Deadwood.upgradeCreditPrices.length; i++) {
             writeln("Rank " + (i + 1) + ": " + Deadwood.upgradeCreditPrices[i] + " Credits or " + Deadwood.upgradeDollarPrices[i] + " Dollars.");
@@ -259,8 +268,10 @@ public class Controller {
             if (rank == player.getRank()) {
                 return 0;
             } else if (rank < player.getRank()) {
+                writeln("");
                 write("Your rank is already higher than the chosen rank. Please try again: ");
             } else {
+                writeln("");
                 if (player.getCredits() < Deadwood.upgradeCreditPrices[rank - 1] && player.getDollars() < Deadwood.upgradeDollarPrices[rank - 1]) {
                     write("You don't have enough credits or dollars for that rank. Please try again: ");
                 } else {
@@ -274,6 +285,7 @@ public class Controller {
                                     player.setCredits(player.getCredits() - Deadwood.upgradeCreditPrices[rank - 1]);
                                     return rank;
                                 } else {
+                                    writeln("");
                                     write("You don't have enough of that currency for this rank. Please try again: ");
                                 }
                                 break;
@@ -282,10 +294,12 @@ public class Controller {
                                     player.setDollars(player.getDollars() - Deadwood.upgradeDollarPrices[rank - 1]);
                                     return rank;
                                 } else {
+                                    writeln("");
                                     write("You don't have enough of that currency for this rank. Please try again: ");
                                 }
                                 break;
                             default:
+                                writeln("");
                                 write("Invalid currency type. Please try again: ");
                                 break;
                         }
