@@ -127,7 +127,7 @@ public class Deadwood {
                 case 3:
                     outputType = act(player);
                     controller.writeResponse(inputCode, outputType);
-                    if (((Set) player.getCurrentRoom()).getTakesLeft() < 1) {
+                    if (player.getCurrentRoom() instanceof Set && ((Set) player.getCurrentRoom()).getTakesLeft() < 1) {
                         scenesLeft--;
                         controller.writeResponse(5, checkForBonusMoney(player));
                     }
