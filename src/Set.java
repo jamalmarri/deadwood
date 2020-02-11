@@ -16,7 +16,7 @@ import java.util.HashSet;
 public class Set extends Room {
     private final int defaultTakes;
     private final HashSet<Part> parts;
-    private Card Card;
+    private Card card;
     private int takesLeft;
 
     /**
@@ -41,7 +41,7 @@ public class Set extends Room {
      * @return the current Card for this Set.
      */
     public Card getCard() {
-        return Card;
+        return card;
     }
 
     /**
@@ -49,10 +49,10 @@ public class Set extends Room {
      * potential star roles that a Player can take,
      * as well as the name and budget of the movie.
      *
-     * @param Card the new Card for this Set.
+     * @param card the new Card for this Set.
      */
-    public void setCard(Card Card) {
-        this.Card = Card;
+    public void setCard(Card card) {
+        this.card = card;
     }
 
     /**
@@ -96,5 +96,15 @@ public class Set extends Room {
      */
     public HashSet<Part> getParts() {
         return parts;
+    }
+
+    /**
+     * Adds a new Part to this Set's 'parts' HashSet, for when
+     * the game adds every Set's Parts.
+     *
+     * @param part the new part to be added to the 'parts' HashSet.
+     */
+    public void addPart(Part part) {
+        parts.add(part);
     }
 }
