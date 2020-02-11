@@ -38,6 +38,7 @@ public class Controller {
                     default:
                         break;
                 }
+                break;
             case 1:
                 switch (outputType) {
                     case -3:
@@ -55,6 +56,7 @@ public class Controller {
                     default:
                         break;
                 }
+                break;
             case 2:
                 switch (outputType) {
                     case -1:
@@ -69,6 +71,7 @@ public class Controller {
                     default:
                         break;
                 }
+                break;
             case 3:
                 switch (outputType) {
                     case -1:
@@ -89,6 +92,7 @@ public class Controller {
                     default:
                         break;
                 }
+                break;
             case 4:
                 switch (outputType) {
                     case -2:
@@ -103,11 +107,13 @@ public class Controller {
                     default:
                         break;
                 }
+                break;
             case 5:
                 if (outputType == 0) {
                     writeln("Bonus money was given to all players on set!");
                 }
                 writeln("Movie completed! Come back tomorrow!");
+                break;
             default:
                 break;
         }
