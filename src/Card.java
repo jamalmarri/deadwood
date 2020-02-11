@@ -85,4 +85,14 @@ public class Card {
     public HashSet<Part> getParts() {
         return parts;
     }
+
+    /**
+     * Adds a new Part to this Card's 'parts' HashSet, for when
+     * the game adds every Card's Parts.
+     *
+     * @param part the new part to be added to the 'parts' HashSet.
+     */
+    public void addPart(Part part) {
+        parts.add(part);
+    }
 }
