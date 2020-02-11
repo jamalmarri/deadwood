@@ -264,8 +264,15 @@ public class Controller {
             writeln("Rank " + (i + 1) + ": " + Deadwood.upgradeCreditPrices[i] + " Credits or " + Deadwood.upgradeDollarPrices[i] + " Dollars.");
         }
         while (true) {
-            rank = scan.nextInt();
-            scan.nextLine();
+            try {
+                rank = scan.nextInt();
+                scan.nextLine();
+            } catch (InputMismatchException e) {
+                writeln("");
+                write("Invalid input. Please try again: ");
+                scan.nextLine();
+                continue;
+            }
             if (rank == player.getRank()) {
                 return 0;
             } else if (rank < player.getRank()) {
