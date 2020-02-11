@@ -1,3 +1,4 @@
+if not exist out mkdir out
 javac -d out/ src/*
 cls
 java -cp out/ Deadwood

@@ -3,7 +3,7 @@ Deadwood game implementation for CSCI 345 at WWU.
 Steps to compile:
 
 Option A:
-1. Simply compile yourself using 'javac -d out/ src/*' at root of repository.
+1. Simply compile yourself using 'mkdir -p out;javac -d out/ src/*' at root of repository.
 2. Run using 'java -cp out/ Deadwood' at root of repository.
 
 Option B:
