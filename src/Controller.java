@@ -152,6 +152,7 @@ public class Controller {
             } catch (InputMismatchException e) {
                 writeln("");
                 write("Invalid input. Please try again: ");
+                scan.nextLine();
                 continue;
             }
             if (!(playerCount >= 2 && playerCount <= 8)) {
