@@ -225,6 +225,7 @@ public class Screen {
      * Writes a prompt for the user to input the Room they would
      * like to move to, then waits for a valid Room name to return.
      *
+     * @param player the Player who will move to the new Room.
      * @return the Room the Player will move to.
      */
     public Room getRoom(Player player) {
@@ -253,6 +254,7 @@ public class Screen {
      * Writes a prompt for the user to input the Part they would
      * like to take, then waits for valid Part name to return.
      *
+     * @param player the Player that will take the new Part.
      * @return the Part the Player is going to take.
      */
     public Part getPart(Player player) {
@@ -304,6 +306,7 @@ public class Screen {
      * Writes a prompt for the user to input the rank they would
      * like to upgrade to, then waits for valid input to return.
      *
+     * @param player the Player whose rank will be upgraded.
      * @return the integer representing a valid rank.
      */
     public int getRank(Player player) {
@@ -343,7 +346,9 @@ public class Screen {
      * Writes a prompt for the user to input the currency they wish
      * to use for their upgrade, then waits for valid input to return.
      *
-     * @return the String representing the currency the player will use.
+     * @param player the Player whose rank will be upgraded.
+     * @param rank the rank the Player will upgrade to.
+     * @return the String representing the currency the Player will use.
      */
     public String getCurrency(Player player, int rank) {
         writeln("What currency would you like to use to purchase this rank? (credits, dollars)");
