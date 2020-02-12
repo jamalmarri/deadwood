@@ -247,6 +247,19 @@ public class Deadwood {
             return -2;
         }
 
+        String currency = screen.getCurrency(player, newRank);
+
+        switch (currency) {
+            case "credits":
+                player.setCredits(player.getCredits() - board.getUpgradeCreditPrices()[newRank - 1]);
+                break;
+            case "dollars":
+                player.setDollars(player.getDollars() - board.getUpgradeDollarPrices()[newRank - 1]);
+                break;
+            default:
+                break;
+        }
+
         player.setRank(newRank);
         return 0;
     }

@@ -3,9 +3,11 @@ import java.util.Scanner;
 
 public class Screen {
     protected Scanner scan;
+    private Board board;
 
-    public Screen() {
+    public Screen(Board board) {
         scan = new Scanner(System.in);
+        this.board = board;
     }
 
     public void writePrompt(Player player, int playerNumber) {
@@ -260,8 +262,8 @@ public class Screen {
         int rank = player.getRank();
         writeln("");
         writeln("What rank would you like to upgrade to? You are currently rank " + rank + ". Enter your current rank to cancel.");
-        for (int i = 0; i < Deadwood.upgradeCreditPrices.length; i++) {
-            writeln("Rank " + (i + 1) + ": " + Deadwood.upgradeCreditPrices[i] + " Credits or " + Deadwood.upgradeDollarPrices[i] + " Dollars.");
+        for (int i = 0; i < board.getUpgradeCreditPrices().length; i++) {
+            writeln("Rank " + (i + 1) + ": " + board.getUpgradeCreditPrices()[i] + " Credits or " + board.getUpgradeDollarPrices()[i] + " Dollars.");
         }
         while (true) {
             try {
@@ -280,39 +282,41 @@ public class Screen {
                 write("Your rank is already higher than the chosen rank. Please try again: ");
             } else {
                 writeln("");
-                if (player.getCredits() < Deadwood.upgradeCreditPrices[rank - 1] && player.getDollars() < Deadwood.upgradeDollarPrices[rank - 1]) {
+                if (player.getCredits() < board.getUpgradeCreditPrices()[rank - 1] && player.getDollars() < board.getUpgradeDollarPrices()[rank - 1]) {
                     write("You don't have enough credits or dollars for that rank. Please try again: ");
                 } else {
-                    writeln("What currency would you like to use to purchase this rank? (credits, dollars)");
-                    String currency;
-                    while (true) {
-                        currency = scan.nextLine();
-                        switch (currency) {
-                            case "credits":
-                                if (player.getCredits() >= Deadwood.upgradeCreditPrices[rank - 1]) {
-                                    player.setCredits(player.getCredits() - Deadwood.upgradeCreditPrices[rank - 1]);
-                                    return rank;
-                                } else {
-                                    writeln("");
-                                    write("You don't have enough of that currency for this rank. Please try again: ");
-                                }
-                                break;
-                            case "dollars":
-                                if (player.getDollars() >= Deadwood.upgradeDollarPrices[rank - 1]) {
-                                    player.setDollars(player.getDollars() - Deadwood.upgradeDollarPrices[rank - 1]);
-                                    return rank;
-                                } else {
-                                    writeln("");
-                                    write("You don't have enough of that currency for this rank. Please try again: ");
-                                }
-                                break;
-                            default:
-                                writeln("");
-                                write("Invalid currency type. Please try again: ");
-                                break;
-                        }
-                    }
+                    return rank;
                 }
+            }
+        }
+    }
+
+    public String getCurrency(Player player, int rank) {
+        writeln("What currency would you like to use to purchase this rank? (credits, dollars)");
+        String currency;
+        while (true) {
+            currency = scan.nextLine();
+            switch (currency) {
+                case "credits":
+                    if (player.getCredits() >= board.getUpgradeCreditPrices()[rank - 1]) {
+                        return currency;
+                    } else {
+                        writeln("");
+                        write("You don't have enough of that currency for this rank. Please try again: ");
+                    }
+                    break;
+                case "dollars":
+                    if (player.getDollars() >= board.getUpgradeDollarPrices()[rank - 1]) {
+                        return currency;
+                    } else {
+                        writeln("");
+                        write("You don't have enough of that currency for this rank. Please try again: ");
+                    }
+                    break;
+                default:
+                    writeln("");
+                    write("Invalid currency type. Please try again: ");
+                    break;
             }
         }
     }
