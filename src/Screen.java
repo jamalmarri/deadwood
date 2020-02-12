@@ -1,10 +1,10 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Controller {
+public class Screen {
     protected Scanner scan;
 
-    public Controller() {
+    public Screen() {
         scan = new Scanner(System.in);
     }
 

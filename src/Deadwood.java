@@ -1,20 +1,13 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class Deadwood {
-    private static final Controller controller = new Controller();
-    private static final ArrayList<Card> deck = new ArrayList<>();
-    private static final HashMap<String, Room> rooms = new HashMap<>();
+    private static final Screen screen = new Screen();
+    private static final Board board = new Board();
     protected static int[] upgradeCreditPrices;
     protected static int[] upgradeDollarPrices;
     private static Player[] players;
     private static int scenesLeft;
     private static int daysLeft;
-    private static Room trailers;
-    private static Room castingOffice;
     private static boolean gameIsRunning;
 
     public static void main(String[] args) {
@@ -36,7 +29,7 @@ public class Deadwood {
 
     private static void init() {
         // Get number of players from user input
-        int playerCount = controller.getInput(0);
+        int playerCount = screen.getInput(0);
 
         // Initialize array of playerCount players
         players = new Player[playerCount];
@@ -47,26 +40,6 @@ public class Deadwood {
         } else {
             daysLeft = 4;
         }
-
-        // Initialize root Rooms
-        trailers = new Room("Trailers", new HashSet<>());
-        castingOffice = new Room("Casting Office", new HashSet<>());
-
-        // TODO: BEGIN TESTING RELATIONS
-        trailers.addNeighbor(castingOffice);
-        Set set = new Set("Test Set", new HashSet<>(), 1, new HashSet<>());
-        Card card = new Card("Test Card", 0, "Test Card Description", 1, new HashSet<>());
-        trailers.addNeighbor(set);
-        set.addPart(new Part("Part name", "Part line", 0));
-        set.setCard(card);
-        set.getCard().addPart(new Part("Card part name", "Part line", 6));
-        // TODO: END TESTING RELATIONS
-
-        // Initialize remaining rooms
-        initRooms();
-
-        // Initialize deck
-        initCards();
 
         // Initialize player objects based on amount of players
         for (int i = 0; i < players.length; i++) {
@@ -87,54 +60,59 @@ public class Deadwood {
             }
         }
 
+        // TODO: BEGIN TESTING PRICES
+        upgradeDollarPrices = new int[6];
+        upgradeCreditPrices = new int[6];
+
+        upgradeDollarPrices[0] = 2;
+        upgradeDollarPrices[1] = 4;
+        upgradeDollarPrices[2] = 8;
+        upgradeDollarPrices[3] = 16;
+        upgradeDollarPrices[4] = 32;
+        upgradeDollarPrices[5] = 0;
+
+        upgradeCreditPrices[0] = 1;
+        upgradeCreditPrices[1] = 2;
+        upgradeCreditPrices[2] = 4;
+        upgradeCreditPrices[3] = 8;
+        upgradeCreditPrices[4] = 16;
+        upgradeCreditPrices[5] = 32;
+        // TODO: END TESTING PRICES
+
         resetDay();
         gameIsRunning = true;
-    }
-
-    private static void initCards() {
-        // TODO: Get card data from XML
-        Collections.shuffle(deck);
-    }
-
-    private static void initRooms() {
-        // TODO: Get room data from XML
-        linkRooms();
-    }
-
-    private static void linkRooms() {
-        // TODO: Establish all neighbor relations
     }
 
     private static void tick(Player player, int playerNumber) {
         int inputCode;
         int outputType = -1;
         while (outputType < 0) {
-            controller.writePrompt(player, playerNumber);
-            inputCode = controller.getInput(1);
+            screen.writePrompt(player, playerNumber);
+            inputCode = screen.getInput(1);
             switch (inputCode) {
                 case 0:
                     outputType = move(player);
-                    controller.writeResponse(inputCode, outputType);
+                    screen.writeResponse(inputCode, outputType);
                     break;
                 case 1:
                     outputType = takePart(player);
-                    controller.writeResponse(inputCode, outputType);
+                    screen.writeResponse(inputCode, outputType);
                     break;
                 case 2:
                     outputType = rehearse(player);
-                    controller.writeResponse(inputCode, outputType);
+                    screen.writeResponse(inputCode, outputType);
                     break;
                 case 3:
                     outputType = act(player);
-                    controller.writeResponse(inputCode, outputType);
+                    screen.writeResponse(inputCode, outputType);
                     if (player.getCurrentRoom() instanceof Set && ((Set) player.getCurrentRoom()).getTakesLeft() < 1) {
                         scenesLeft--;
-                        controller.writeResponse(5, checkForBonusMoney(player));
+                        screen.writeResponse(5, checkForBonusMoney(player));
                     }
                     break;
                 case 4:
                     outputType = upgrade(player);
-                    controller.writeResponse(inputCode, outputType);
+                    screen.writeResponse(inputCode, outputType);
                     break;
                 default:
                     break;
@@ -150,7 +128,7 @@ public class Deadwood {
             return -1;
         } else {
             player.getCurrentRoom().removePlayer(player);
-            player.setCurrentRoom(controller.getRoom(player));
+            player.setCurrentRoom(screen.getRoom(player));
             player.getCurrentRoom().addPlayer(player);
             return 0;
         }
@@ -164,7 +142,7 @@ public class Deadwood {
         } else if (((Set) player.getCurrentRoom()).getTakesLeft() < 1) {
             return -3;
         } else {
-            player.setCurrentPart(controller.getPart(player));
+            player.setCurrentPart(screen.getPart(player));
             player.getCurrentPart().setPlayerOnPart(player);
             player.setActing(true);
             return 0;
@@ -280,11 +258,11 @@ public class Deadwood {
     }
 
     private static int upgrade(Player player) {
-        if (player.getCurrentRoom() != castingOffice) {
+        if (player.getCurrentRoom() != board.getCastingOffice()) {
             return -1;
         }
 
-        int newRank = controller.getRank(player);
+        int newRank = screen.getRank(player);
 
         if (newRank < 1) {
             return -2;
@@ -297,16 +275,16 @@ public class Deadwood {
     private static void resetDay() {
         // Reset players
         for (Player player : players) {
-            player.setCurrentRoom(trailers);
+            player.setCurrentRoom(board.getTrailers());
             player.setActing(false);
         }
 
         // Reset sets
-        for (Room room : rooms.values()) {
+        for (Room room : board.getRooms().values()) {
             if (room instanceof Set) {
                 ((Set) room).setTakesLeft(((Set) room).getDefaultTakes());
-                ((Set) room).setCard(deck.get(0));
-                deck.remove(0);
+                ((Set) room).setCard(board.getDeck().get(0));
+                board.getDeck().remove(0);
             }
         }
         scenesLeft = 10;
@@ -317,6 +295,6 @@ public class Deadwood {
         for (int i = 0; i < players.length; i++) {
             scores[i] = players[i].getScore();
         }
-        controller.writeScores(scores);
+        screen.writeScores(scores);
     }
 }
