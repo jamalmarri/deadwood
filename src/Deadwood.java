@@ -27,7 +27,7 @@ public class Deadwood {
 
     private static void init() {
         // Get number of players from user input
-        int playerCount = screen.getInput(0);
+        int playerCount = screen.getPlayerCount();
 
         // Initialize array of playerCount players
         players = new Player[playerCount];
@@ -66,8 +66,8 @@ public class Deadwood {
         int inputCode;
         int outputType = -1;
         while (outputType < 0) {
-            screen.writePrompt(player, playerNumber);
-            inputCode = screen.getInput(1);
+            screen.writePlayerInfo(player, playerNumber);
+            inputCode = screen.getPlayerAction();
             switch (inputCode) {
                 case 0:
                     outputType = move(player);

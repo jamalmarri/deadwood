@@ -1,16 +1,32 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Represents the Screen that the user interacts
+ * with, and handles all input and output for the game.
+ */
 public class Screen {
     protected Scanner scan;
     private Board board;
 
+    /**
+     * Class constructor.
+     *
+     * @param board the Board belonging to the game that this Screen is handling the I/O of.
+     */
     public Screen(Board board) {
         scan = new Scanner(System.in);
         this.board = board;
     }
 
-    public void writePrompt(Player player, int playerNumber) {
+    /**
+     * Writes the information that each user will see when beginning
+     * their turn.
+     *
+     * @param player the Player whose prompt will be written.
+     * @param playerNumber the number that identifies the Player.
+     */
+    public void writePlayerInfo(Player player, int playerNumber) {
         // Separator to make output easier to read
         writeln("------------------------------------------------------------");
 
@@ -27,6 +43,13 @@ public class Screen {
         writeln("");
     }
 
+    /**
+     * Writes the appropriate response to a given move
+     * that the Player makes, using the given output type.
+     *
+     * @param action the action that was performed to initiate this response.
+     * @param outputType the type of output to be written.
+     */
     public void writeResponse(int action, int outputType) {
         writeln("");
         switch (action) {
@@ -122,6 +145,12 @@ public class Screen {
         }
     }
 
+    /**
+     * Writes all of the Players' scores at the end
+     * of the game, using the inputted array of scores.
+     *
+     * @param scores the integer array representing all of the Players' scores.
+     */
     public void writeScores(int[] scores) {
         writeln("Game Over!");
         writeln("Scores:");
@@ -131,18 +160,13 @@ public class Screen {
         scan.close();
     }
 
-    public int getInput(int inputType) {
-        switch (inputType) {
-            case 0:
-                return getPlayerCount();
-            case 1:
-                return getPlayerAction();
-            default:
-                return -1;
-        }
-    }
-
-    private int getPlayerCount() {
+    /**
+     * Writes a prompt for the user to input the number
+     * of Players, then waits for valid input to return.
+     *
+     * @return the number of Players in the game.
+     */
+    public int getPlayerCount() {
         write("Enter number of players [2-8]: ");
         int playerCount = 0;
 
@@ -165,7 +189,13 @@ public class Screen {
         return playerCount;
     }
 
-    private int getPlayerAction() {
+    /**
+     * Writes a prompt for the user to input their next action
+     * for the current turn, then waits for valid input to return.
+     *
+     * @return the integer code representing a valid action.
+     */
+    public int getPlayerAction() {
         writeln("");
         writeln("What would you like to do?");
         writeln("(move, take, rehearse, act, upgrade)");
@@ -191,6 +221,12 @@ public class Screen {
         }
     }
 
+    /**
+     * Writes a prompt for the user to input the Room they would
+     * like to move to, then waits for a valid Room name to return.
+     *
+     * @return the Room the Player will move to.
+     */
     public Room getRoom(Player player) {
         writeln("");
         writeln("Which room would you like to move to?");
@@ -213,6 +249,12 @@ public class Screen {
         }
     }
 
+    /**
+     * Writes a prompt for the user to input the Part they would
+     * like to take, then waits for valid Part name to return.
+     *
+     * @return the Part the Player is going to take.
+     */
     public Part getPart(Player player) {
         writeln("");
         writeln("Which part would you like to take?");
@@ -258,6 +300,12 @@ public class Screen {
         }
     }
 
+    /**
+     * Writes a prompt for the user to input the rank they would
+     * like to upgrade to, then waits for valid input to return.
+     *
+     * @return the integer representing a valid rank.
+     */
     public int getRank(Player player) {
         int rank = player.getRank();
         writeln("");
@@ -291,6 +339,12 @@ public class Screen {
         }
     }
 
+    /**
+     * Writes a prompt for the user to input the currency they wish
+     * to use for their upgrade, then waits for valid input to return.
+     *
+     * @return the String representing the currency the player will use.
+     */
     public String getCurrency(Player player, int rank) {
         writeln("What currency would you like to use to purchase this rank? (credits, dollars)");
         String currency;
@@ -321,10 +375,20 @@ public class Screen {
         }
     }
 
+    /**
+     * Writes the given output to the System.out output stream.
+     *
+     * @param output the String to print to the output stream.
+     */
     private void write(String output) {
         System.out.print(output);
     }
 
+    /**
+     * Writes the given output, then writes an empty line.
+     *
+     * @param output the String to print to the output stream.
+     */
     private void writeln(String output) {
         write(output);
         System.out.println();
