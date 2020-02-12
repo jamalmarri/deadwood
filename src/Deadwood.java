@@ -1,10 +1,8 @@
 import java.util.Arrays;
 
 public class Deadwood {
-    private static final Screen screen = new Screen();
     private static final Board board = new Board();
-    protected static int[] upgradeCreditPrices;
-    protected static int[] upgradeDollarPrices;
+    private static final Screen screen = new Screen(board);
     private static Player[] players;
     private static int scenesLeft;
     private static int daysLeft;
@@ -59,25 +57,6 @@ public class Deadwood {
                     break;
             }
         }
-
-        // TODO: BEGIN TESTING PRICES
-        upgradeDollarPrices = new int[6];
-        upgradeCreditPrices = new int[6];
-
-        upgradeDollarPrices[0] = 2;
-        upgradeDollarPrices[1] = 4;
-        upgradeDollarPrices[2] = 8;
-        upgradeDollarPrices[3] = 16;
-        upgradeDollarPrices[4] = 32;
-        upgradeDollarPrices[5] = 0;
-
-        upgradeCreditPrices[0] = 1;
-        upgradeCreditPrices[1] = 2;
-        upgradeCreditPrices[2] = 4;
-        upgradeCreditPrices[3] = 8;
-        upgradeCreditPrices[4] = 16;
-        upgradeCreditPrices[5] = 32;
-        // TODO: END TESTING PRICES
 
         resetDay();
         gameIsRunning = true;

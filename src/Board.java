@@ -10,6 +10,8 @@ import java.util.HashSet;
  * 'Trailers' and 'Casting Office' Rooms.
  */
 public class Board {
+    private final int[] upgradeCreditPrices = new int[6];
+    private final int[] upgradeDollarPrices = new int[6];
     private final ArrayList<Card> deck = new ArrayList<>();
     private final HashMap<String, Room> rooms = new HashMap<>();
     private final Room trailers = new Room("Trailers", new HashSet<>());
@@ -26,6 +28,8 @@ public class Board {
         initCards();
         // Initialize rooms
         initRooms();
+        // Initialize upgrade prices
+        initPrices();
     }
 
     /**
@@ -60,12 +64,56 @@ public class Board {
     }
 
     /**
+     * Reads and stores all upgrade pricing
+     * information from the 'board' XML file
+     * for the game.
+     */
+    private void initPrices() {
+        // TODO: BEGIN TESTING PRICES
+
+        upgradeDollarPrices[0] = 2;
+        upgradeDollarPrices[1] = 4;
+        upgradeDollarPrices[2] = 8;
+        upgradeDollarPrices[3] = 16;
+        upgradeDollarPrices[4] = 32;
+        upgradeDollarPrices[5] = 0;
+
+        upgradeCreditPrices[0] = 1;
+        upgradeCreditPrices[1] = 2;
+        upgradeCreditPrices[2] = 4;
+        upgradeCreditPrices[3] = 8;
+        upgradeCreditPrices[4] = 16;
+        upgradeCreditPrices[5] = 32;
+        // TODO: END TESTING PRICES
+    }
+
+    /**
      * Establishes all neighbor connections
      * between the Rooms of the game, using
      * information from the 'boards' XML file.
      */
     private void linkRooms() {
         // TODO: Establish all neighbor relations
+    }
+
+    /**
+     * Gets the array of credit rank upgrade pricing,
+     * used when a Player upgrades their rank.
+     *
+     * @return the integer array of credit pricing for this Board.
+     */
+    public int[] getUpgradeCreditPrices() {
+        return upgradeCreditPrices;
+    }
+
+    /**
+     * Gets the array of dollar rank upgrade pricing,
+     * used when a Player upgrades their rank.
+     *
+     * @return the integer array of dollar pricing for this Board.
+     */
+    public int[] getUpgradeDollarPrices() {
+        return upgradeDollarPrices;
     }
 
     /**
