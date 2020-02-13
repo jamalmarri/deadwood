@@ -15,6 +15,7 @@ public class Deadwood {
                 tick(players[i], i + 1);
                 if (scenesLeft < 2) {
                     daysLeft--;
+                    resetDay();
                 }
                 if (daysLeft < 1) {
                     gameIsRunning = false;
@@ -72,6 +73,9 @@ public class Deadwood {
                 case 0:
                     outputType = move(player);
                     screen.writeResponse(inputCode, outputType);
+                    if (player.getCurrentRoom() instanceof Set && !player.isActing() && ((Set) player.getCurrentRoom()).getTakesLeft() > 0 && screen.attemptPart(player)) {
+                        screen.writeResponse(1, takePart(player));
+                    }
                     break;
                 case 1:
                     outputType = takePart(player);
@@ -84,7 +88,7 @@ public class Deadwood {
                 case 3:
                     outputType = act(player);
                     screen.writeResponse(inputCode, outputType);
-                    if (player.getCurrentRoom() instanceof Set && ((Set) player.getCurrentRoom()).getTakesLeft() < 1) {
+                    if (player.getCurrentRoom() instanceof Set && ((Set) player.getCurrentRoom()).getTakesLeft() < 1 && player.isActing()) {
                         scenesLeft--;
                         screen.writeResponse(5, checkForBonusMoney(player));
                     }
@@ -97,9 +101,6 @@ public class Deadwood {
                     break;
             }
         }
-
-        // This is a placeholder to stop the game from looping infinitely.
-        daysLeft = players.length - playerNumber;
     }
 
     private static int move(Player player) {
@@ -114,16 +115,33 @@ public class Deadwood {
     }
 
     private static int takePart(Player player) {
+        boolean partPossible = false;
+        for (Part part : ((Set) player.getCurrentRoom()).getParts()) {
+            if (part.getLevel() <= player.getRank() && part.getPlayerOnPart() == null) {
+                partPossible = true;
+                break;
+            }
+        }
+        for (Part part : ((Set) player.getCurrentRoom()).getCard().getParts()) {
+            if (part.getLevel() <= player.getRank() && part.getPlayerOnPart() == null) {
+                partPossible = true;
+                break;
+            }
+        }
+
         if (!(player.getCurrentRoom() instanceof Set)) {
             return -1;
         } else if (player.isActing()) {
             return -2;
         } else if (((Set) player.getCurrentRoom()).getTakesLeft() < 1) {
             return -3;
+        } else if (!partPossible) {
+            return -4;
         } else {
             player.setCurrentPart(screen.getPart(player));
             player.getCurrentPart().setPlayerOnPart(player);
             player.setActing(true);
+            player.setOnCard(((Set) player.getCurrentRoom()).getCard().getParts().contains(player.getCurrentPart()));
             return 0;
         }
     }
@@ -135,7 +153,7 @@ public class Deadwood {
 
         Set currentSet = (Set) player.getCurrentRoom();
         int budget = currentSet.getCard().getBudget();
-        if ((player.getTimesRehearsedThisScene() - budget) < 1) {
+        if ((budget - player.getTimesRehearsedThisScene()) < 2) {
             return 1;
         }
 
@@ -192,46 +210,41 @@ public class Deadwood {
 
         // Generate array of star players based on their part's level
         Player[] orderedStars = new Player[6];
-        for (int i = 0; i < orderedStars.length; i++) {
-            for (Part part : ((Set) player.getCurrentRoom()).getCard().getParts()) {
-                if (part.getPlayerOnPart() != null) {
-                    orderedStars[i] = part.getPlayerOnPart();
-                    break;
-                }
+        for (Part part : ((Set) player.getCurrentRoom()).getCard().getParts()) {
+            if (part.getPlayerOnPart() != null) {
+                orderedStars[part.getLevel() - 1] = part.getPlayerOnPart();
             }
         }
 
         // Apply money to stars
-        int playerPointer = -1;
-        for (int i = bonus.length - 1; i >= 0; i--) {
-            playerPointer++;
-            for (; orderedStars[playerPointer] != null; playerPointer++) {
-                if (playerPointer >= orderedStars.length - 1) {
-                    if (orderedStars[playerPointer] != null) {
-                        orderedStars[playerPointer].setDollars(orderedStars[playerPointer].getDollars() + bonus[i]);
-                    }
-                    playerPointer = 0;
-                }
+        int playerPointer = orderedStars.length - 1;
+        for (int i = bonus.length - 1; i >= 0; ) {
+            if (orderedStars[playerPointer] != null) {
+                System.out.println("Adding " + bonus[i] + " dollars to Player playing " + orderedStars[playerPointer].getCurrentPart().getName() + ".");
+                orderedStars[playerPointer].setDollars(orderedStars[playerPointer].getDollars() + bonus[i]);
+                i--;
             }
-            orderedStars[playerPointer].setDollars(orderedStars[playerPointer].getDollars() + bonus[i]);
+            playerPointer--;
+            if (playerPointer < 0) {
+                playerPointer = orderedStars.length - 1;
+            }
         }
 
         // Apply money to extras
         for (Part part : ((Set) player.getCurrentRoom()).getParts()) {
             if (part.getPlayerOnPart() != null) {
+                System.out.println("Adding " + part.getLevel() + " dollars to Player playing " + orderedStars[playerPointer].getCurrentPart().getName() + ".");
                 part.getPlayerOnPart().setDollars(player.getDollars() + player.getCurrentPart().getLevel());
             }
         }
 
-        // Remove players from parts
-        for (Part part : (((Set) player.getCurrentRoom()).getParts())) {
-            part.setPlayerOnPart(null);
-        }
-
-        // Remove parts from players
-        for (Player playerInSet : player.getCurrentRoom().getPlayers()) {
-            playerInSet.setCurrentPart(null);
-            playerInSet.setActing(false);
+        // Remove players from parts and vice versa
+        for (Player playerOnSet : player.getCurrentRoom().getPlayers()) {
+            playerOnSet.setActing(false);
+            playerOnSet.setOnCard(false);
+            playerOnSet.setTimesRehearsedThisScene(0);
+            player.getCurrentPart().setPlayerOnPart(null);
+            playerOnSet.setCurrentPart(null);
         }
         return 0;
     }
@@ -251,10 +264,10 @@ public class Deadwood {
 
         switch (currency) {
             case "credits":
-                player.setCredits(player.getCredits() - board.getUpgradeCreditPrices()[newRank - 1]);
+                player.setCredits(player.getCredits() - board.getUpgradeCreditPrices()[newRank - 2]);
                 break;
             case "dollars":
-                player.setDollars(player.getDollars() - board.getUpgradeDollarPrices()[newRank - 1]);
+                player.setDollars(player.getDollars() - board.getUpgradeDollarPrices()[newRank - 2]);
                 break;
             default:
                 break;
@@ -275,11 +288,15 @@ public class Deadwood {
         for (Room room : board.getRooms().values()) {
             if (room instanceof Set) {
                 ((Set) room).setTakesLeft(((Set) room).getDefaultTakes());
-                ((Set) room).setCard(board.getDeck().get(0));
-                board.getDeck().remove(0);
+                ((Set) room).setCard(board.getDeck().get(board.getDeck().size() - 1));
+                board.getDeck().remove(board.getDeck().size() - 1);
             }
         }
         scenesLeft = 10;
+
+        if (gameIsRunning) {
+            screen.writeResetMessage();
+        }
     }
 
     private static void tallyScores() {
