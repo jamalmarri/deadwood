@@ -23,7 +23,7 @@ public class Screen {
      * Writes the information that each user will see when beginning
      * their turn.
      *
-     * @param player the Player whose prompt will be written.
+     * @param player       the Player whose prompt will be written.
      * @param playerNumber the number that identifies the Player.
      */
     public void writePlayerInfo(Player player, int playerNumber) {
@@ -37,17 +37,27 @@ public class Screen {
         // Print neighboring rooms of player's current room
         write("Neighboring rooms:");
         for (Room neighbor : player.getCurrentRoom().getNeighbors()) {
-            write(" " + neighbor.getName());
+            write(" \"" + neighbor.getName() + "\"");
         }
 
         writeln("");
+
+        // Print the current set's budget if applicable
+        if (player.getCurrentRoom() instanceof Set) {
+            writeln("Set's current movie budget: " + ((Set) player.getCurrentRoom()).getCard().getBudget());
+            writeln("Takes left for this movie: " + ((Set) player.getCurrentRoom()).getTakesLeft());
+            if (player.isActing()) {
+                writeln("Your current part: " + player.getCurrentPart().getName());
+                writeln("You've rehearsed " + player.getTimesRehearsedThisScene() + " times for this part.");
+            }
+        }
     }
 
     /**
      * Writes the appropriate response to a given move
      * that the Player makes, using the given output type.
      *
-     * @param action the action that was performed to initiate this response.
+     * @param action     the action that was performed to initiate this response.
      * @param outputType the type of output to be written.
      */
     public void writeResponse(int action, int outputType) {
@@ -67,6 +77,9 @@ public class Screen {
                 break;
             case 1:
                 switch (outputType) {
+                    case -4:
+                        writeln("There are no parts you can take in this movie.");
+                        break;
                     case -3:
                         writeln("This movie has already been completed. Come back tomorrow.");
                         break;
@@ -143,6 +156,37 @@ public class Screen {
             default:
                 break;
         }
+    }
+
+    public boolean attemptPart(Player player) {
+        writeln("Set's current movie budget: " + ((Set) player.getCurrentRoom()).getCard().getBudget());
+        writeln("Takes left for this movie: " + ((Set) player.getCurrentRoom()).getTakesLeft());
+        write("Would you like to take a part here (yes, no)? ");
+        String input;
+        while (true) {
+            input = scan.nextLine();
+            switch (input) {
+                case "yes":
+                    writeln("");
+                    return true;
+                case "no":
+                    writeln("");
+                    return false;
+                default:
+                    writeln("");
+                    write("Invalid input. Please try again: ");
+            }
+        }
+    }
+
+    /**
+     * Writes a message informing the user that
+     * the day has been reset.
+     */
+    public void writeResetMessage() {
+        writeln("------------------------------------------------------------");
+        writeln("The day is over! All players have been sent back to their trailers.");
+        writeln("New movies are now available in every set. Go put yourself out there!");
     }
 
     /**
@@ -234,7 +278,7 @@ public class Screen {
         // Print neighboring rooms of player's current room
         write("Neighboring rooms:");
         for (Room neighbor : player.getCurrentRoom().getNeighbors()) {
-            write(" " + neighbor.getName());
+            write(" \"" + neighbor.getName() + "\"");
         }
         writeln("");
         String input;
@@ -263,42 +307,54 @@ public class Screen {
 
         writeln("On the card:");
         for (Part part : ((Set) player.getCurrentRoom()).getCard().getParts()) {
-            writeln("(" + part.getLevel() + ") " + part.getName() + ": \"" + part.getLine() + "\"");
+            writeln("(" + part.getLevel() + ") \"" + part.getName() + "\": \"" + part.getLine() + "\"");
         }
         writeln("");
 
         writeln("Off the card:");
         for (Part part : ((Set) player.getCurrentRoom()).getParts()) {
-            writeln("(" + part.getLevel() + ") " + part.getName() + ": \"" + part.getLine() + "\"");
+            writeln("(" + part.getLevel() + ") \"" + part.getName() + "\": \"" + part.getLine() + "\"");
         }
 
         String input;
+        boolean validPartName;
         while (true) {
+            validPartName = false;
             input = scan.nextLine();
             for (Part part : ((Set) player.getCurrentRoom()).getCard().getParts()) {
                 if (part.getName().equals(input)) {
-                    if (player.getRank() >= part.getLevel()) {
-                        player.setOnCard(true);
+                    if (player.getRank() >= part.getLevel() && part.getPlayerOnPart() == null) {
                         return part;
                     } else {
+                        validPartName = true;
                         writeln("");
-                        write("You are not a high enough rank for that part. Please try again: ");
+                        if (part.getPlayerOnPart() == null) {
+                            write("You are not a high enough rank for that part. Please try again: ");
+                        } else {
+                            write("Another player is currently acting that part. Please try again: ");
+                        }
                     }
                 }
             }
             for (Part part : ((Set) player.getCurrentRoom()).getParts()) {
                 if (part.getName().equals(input)) {
-                    if (player.getRank() >= part.getLevel()) {
-                        player.setOnCard(false);
+                    if (player.getRank() >= part.getLevel() && part.getPlayerOnPart() == null) {
                         return part;
                     } else {
+                        validPartName = true;
                         writeln("");
-                        write("You are not a high enough rank for that part. Please try again: ");
+                        if (part.getPlayerOnPart() == null) {
+                            write("You are not a high enough rank for that part. Please try again: ");
+                        } else {
+                            write("Another player is currently acting that part. Please try again: ");
+                        }
                     }
                 }
             }
-            writeln("");
-            write("Invalid part name. Please try again: ");
+            if (!validPartName) {
+                writeln("");
+                write("Invalid part name. Please try again: ");
+            }
         }
     }
 
@@ -314,7 +370,7 @@ public class Screen {
         writeln("");
         writeln("What rank would you like to upgrade to? You are currently rank " + rank + ". Enter your current rank to cancel.");
         for (int i = 0; i < board.getUpgradeCreditPrices().length; i++) {
-            writeln("Rank " + (i + 1) + ": " + board.getUpgradeCreditPrices()[i] + " Credits or " + board.getUpgradeDollarPrices()[i] + " Dollars.");
+            writeln("Rank " + (i + 2) + ": " + board.getUpgradeCreditPrices()[i] + " Credits or " + board.getUpgradeDollarPrices()[i] + " Dollars.");
         }
         while (true) {
             try {
@@ -333,7 +389,7 @@ public class Screen {
                 write("Your rank is already higher than the chosen rank. Please try again: ");
             } else {
                 writeln("");
-                if (player.getCredits() < board.getUpgradeCreditPrices()[rank - 1] && player.getDollars() < board.getUpgradeDollarPrices()[rank - 1]) {
+                if (player.getCredits() < board.getUpgradeCreditPrices()[rank - 2] && player.getDollars() < board.getUpgradeDollarPrices()[rank - 2]) {
                     write("You don't have enough credits or dollars for that rank. Please try again: ");
                 } else {
                     return rank;
@@ -347,7 +403,7 @@ public class Screen {
      * to use for their upgrade, then waits for valid input to return.
      *
      * @param player the Player whose rank will be upgraded.
-     * @param rank the rank the Player will upgrade to.
+     * @param rank   the rank the Player will upgrade to.
      * @return the String representing the currency the Player will use.
      */
     public String getCurrency(Player player, int rank) {
@@ -357,7 +413,7 @@ public class Screen {
             currency = scan.nextLine();
             switch (currency) {
                 case "credits":
-                    if (player.getCredits() >= board.getUpgradeCreditPrices()[rank - 1]) {
+                    if (player.getCredits() >= board.getUpgradeCreditPrices()[rank - 2]) {
                         return currency;
                     } else {
                         writeln("");
@@ -365,7 +421,7 @@ public class Screen {
                     }
                     break;
                 case "dollars":
-                    if (player.getDollars() >= board.getUpgradeDollarPrices()[rank - 1]) {
+                    if (player.getDollars() >= board.getUpgradeDollarPrices()[rank - 2]) {
                         return currency;
                     } else {
                         writeln("");
