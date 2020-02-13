@@ -10,12 +10,13 @@ import java.util.HashSet;
  * 'Trailers' and 'Casting Office' Rooms.
  */
 public class Board {
-    private final int[] upgradeCreditPrices = new int[6];
-    private final int[] upgradeDollarPrices = new int[6];
-    private final ArrayList<Card> deck = new ArrayList<>();
-    private final HashMap<String, Room> rooms = new HashMap<>();
     private final Room trailers = new Room("Trailers", new HashSet<>());
     private final Room castingOffice = new Room("Casting Office", new HashSet<>());
+    private final XMLParser parser = new XMLParser();
+    private int[] upgradeCreditPrices;
+    private int[] upgradeDollarPrices;
+    private ArrayList<Card> deck;
+    private HashMap<String, Room> rooms;
 
     /**
      * This constructor simply starts
@@ -37,7 +38,7 @@ public class Board {
      * from the 'cards' XML file for the game.
      */
     private void initCards() {
-        // TODO: Get card data from XML
+        deck = parser.readCards();
         Collections.shuffle(deck);
     }
 
@@ -46,20 +47,9 @@ public class Board {
      * from the 'board' XML file for the game.
      */
     private void initRooms() {
+        rooms = parser.readRooms();
         rooms.put("Trailers", trailers);
         rooms.put("Casting Office", castingOffice);
-
-        // TODO: BEGIN TESTING RELATIONS
-        trailers.addNeighbor(castingOffice);
-        Set set = new Set("Test Set", new HashSet<>(), 1, new HashSet<>());
-        Card card = new Card("Test Card", 0, "Test Card Description", 1, new HashSet<>());
-        trailers.addNeighbor(set);
-        set.addPart(new Part("Part name", "Part line", 0));
-        set.setCard(card);
-        set.getCard().addPart(new Part("Card part name", "Part line", 6));
-        // TODO: END TESTING RELATIONS
-
-        // TODO: Get room data from XML
         linkRooms();
     }
 
@@ -69,22 +59,8 @@ public class Board {
      * for the game.
      */
     private void initPrices() {
-        // TODO: BEGIN TESTING PRICES
-
-        upgradeDollarPrices[0] = 2;
-        upgradeDollarPrices[1] = 4;
-        upgradeDollarPrices[2] = 8;
-        upgradeDollarPrices[3] = 16;
-        upgradeDollarPrices[4] = 32;
-        upgradeDollarPrices[5] = 0;
-
-        upgradeCreditPrices[0] = 1;
-        upgradeCreditPrices[1] = 2;
-        upgradeCreditPrices[2] = 4;
-        upgradeCreditPrices[3] = 8;
-        upgradeCreditPrices[4] = 16;
-        upgradeCreditPrices[5] = 32;
-        // TODO: END TESTING PRICES
+        upgradeCreditPrices = parser.readPricing("credit");
+        upgradeDollarPrices = parser.readPricing("dollar");
     }
 
     /**
@@ -93,7 +69,18 @@ public class Board {
      * information from the 'boards' XML file.
      */
     private void linkRooms() {
-        // TODO: Establish all neighbor relations
+        HashSet<String> neighborNames;
+        for (String roomName : rooms.keySet()) {
+            neighborNames = parser.readNeighbors(rooms.get(roomName));
+            for (String neighborName : neighborNames) {
+                if (neighborName.equals("trailer")) {
+                    neighborName = "Trailers";
+                } else if (neighborName.equals("office")) {
+                    neighborName = "Casting Office";
+                }
+                rooms.get(roomName).addNeighbor(rooms.get(neighborName));
+            }
+        }
     }
 
     /**
