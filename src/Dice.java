@@ -26,7 +26,6 @@ public final class Dice {
         int[] rolls = new int[amountToRoll];
         for (int i = 0; i < rolls.length; i++) {
             rolls[i] = r.nextInt(6) + 1;
-            System.out.println(rolls[i]);
         }
         return rolls;
     }
