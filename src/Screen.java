@@ -158,6 +158,14 @@ public class Screen {
         }
     }
 
+    /**
+     * Writes a prompt for the user to input whether or
+     * not they want to try to take a Part in the same
+     * turn that they have moved.
+     *
+     * @param player the Player that will attempt to take a Part.
+     * @return whether or not the user inputted 'yes'.
+     */
     public boolean attemptPart(Player player) {
         writeln("Set's current movie budget: " + ((Set) player.getCurrentRoom()).getCard().getBudget());
         writeln("Takes left for this movie: " + ((Set) player.getCurrentRoom()).getTakesLeft());
