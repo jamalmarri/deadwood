@@ -115,6 +115,10 @@ public class Deadwood {
     }
 
     private static int takePart(Player player) {
+        if (!(player.getCurrentRoom() instanceof Set)) {
+            return -1;
+        }
+
         boolean partPossible = false;
         for (Part part : ((Set) player.getCurrentRoom()).getParts()) {
             if (part.getLevel() <= player.getRank() && part.getPlayerOnPart() == null) {
@@ -129,9 +133,7 @@ public class Deadwood {
             }
         }
 
-        if (!(player.getCurrentRoom() instanceof Set)) {
-            return -1;
-        } else if (player.isActing()) {
+        if (player.isActing()) {
             return -2;
         } else if (((Set) player.getCurrentRoom()).getTakesLeft() < 1) {
             return -3;
