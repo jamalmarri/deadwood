@@ -44,7 +44,8 @@ public class Screen {
 
         // Print the current set's budget if applicable
         if (player.getCurrentRoom() instanceof Set) {
-            writeln("Set's current movie budget: " + ((Set) player.getCurrentRoom()).getCard().getBudget());
+            Card currentCard = ((Set) player.getCurrentRoom()).getCard();
+            writeln("Set's current movie is scene " + currentCard.getSceneNumber() + ": \"" + currentCard.getName() + "\" - Budget: " + currentCard.getBudget());
             writeln("Takes left for this movie: " + ((Set) player.getCurrentRoom()).getTakesLeft());
             if (player.isActing()) {
                 writeln("Your current part: " + player.getCurrentPart().getName());
@@ -167,7 +168,8 @@ public class Screen {
      * @return whether or not the user inputted 'yes'.
      */
     public boolean attemptPart(Player player) {
-        writeln("Set's current movie budget: " + ((Set) player.getCurrentRoom()).getCard().getBudget());
+        Card currentCard = ((Set) player.getCurrentRoom()).getCard();
+        writeln("Set's current movie is scene " + currentCard.getSceneNumber() + ": \"" + currentCard.getName() + "\" - Budget: " + currentCard.getBudget());
         writeln("Takes left for this movie: " + ((Set) player.getCurrentRoom()).getTakesLeft());
         write("Would you like to take a part here (yes, no)? ");
         String input;
