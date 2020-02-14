@@ -38,19 +38,50 @@ public class Board {
      * from the 'cards' XML file for the game.
      */
     private void initCards() {
+        // Initialize cards
         deck = parser.readCards();
+        // Shuffle the deck
         Collections.shuffle(deck);
     }
 
     /**
-     * Reads and stores all Card information
+     * Reads and stores all Room information
      * from the 'board' XML file for the game.
      */
     private void initRooms() {
+        // Initialize rooms
         rooms = parser.readRooms();
+        // Add special case rooms
         rooms.put("Trailers", trailers);
         rooms.put("Casting Office", castingOffice);
+        // Begin neighbor initialization
         linkRooms();
+    }
+
+    /**
+     * Establishes all neighbor connections
+     * between the Rooms of the game, using
+     * information from the 'boards' XML file.
+     */
+    private void linkRooms() {
+        HashSet<String> neighborNames;
+        // For every room in the rooms HashMap
+        for (String roomName : rooms.keySet()) {
+            // Initialize neighbor names HashSet using the parsed neighbor names
+            neighborNames = parser.readNeighbors(rooms.get(roomName));
+            // For every neighbor name in neighbor names HashSet
+            for (String neighborName : neighborNames) {
+                // Special case for 'trailers' room
+                if (neighborName.equals("trailer")) {
+                    neighborName = "Trailers";
+                    // Special case for 'casting office' room
+                } else if (neighborName.equals("office")) {
+                    neighborName = "Casting Office";
+                }
+                // Add neighbor to room's neighbors HashSet
+                rooms.get(roomName).addNeighbor(rooms.get(neighborName));
+            }
+        }
     }
 
     /**
@@ -61,26 +92,6 @@ public class Board {
     private void initPrices() {
         upgradeCreditPrices = parser.readPricing("credit");
         upgradeDollarPrices = parser.readPricing("dollar");
-    }
-
-    /**
-     * Establishes all neighbor connections
-     * between the Rooms of the game, using
-     * information from the 'boards' XML file.
-     */
-    private void linkRooms() {
-        HashSet<String> neighborNames;
-        for (String roomName : rooms.keySet()) {
-            neighborNames = parser.readNeighbors(rooms.get(roomName));
-            for (String neighborName : neighborNames) {
-                if (neighborName.equals("trailer")) {
-                    neighborName = "Trailers";
-                } else if (neighborName.equals("office")) {
-                    neighborName = "Casting Office";
-                }
-                rooms.get(roomName).addNeighbor(rooms.get(neighborName));
-            }
-        }
     }
 
     /**
