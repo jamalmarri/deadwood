@@ -1,5 +1,16 @@
 import java.util.Arrays;
 
+/**
+ * Represents the game Deadwood, and a
+ * fully functioning implementation of it.
+ *
+ * @author Jamal Marri
+ * @author Megan Theimer
+ * @version 1.0
+ * @see Board
+ * @see Screen
+ * @see Player
+ */
 public class Deadwood {
     private static final Board board = new Board();
     private static final Screen screen = new Screen(board);
@@ -8,9 +19,16 @@ public class Deadwood {
     private static int daysLeft;
     private static boolean gameIsRunning;
 
+    /**
+     * Main loop of the game, which controls it
+     * at the highest level.
+     *
+     * @param args the command-line arguments passed to the game.
+     */
     public static void main(String[] args) {
         init();
         while (gameIsRunning) {
+            // For every player, tick the game another turn
             for (int i = 0; i < players.length; i++) {
                 tick(players[i], i + 1);
                 if (scenesLeft < 2) {
@@ -26,6 +44,11 @@ public class Deadwood {
         tallyScores();
     }
 
+    /**
+     * Starts the game by asking the user for the
+     * number of Players, and then initializes all
+     * of the Player objects and game variables.
+     */
     private static void init() {
         // Get number of players from user input
         int playerCount = screen.getPlayerCount();
@@ -59,20 +82,41 @@ public class Deadwood {
             }
         }
 
+        // First-time reset to position the players and deal out cards to all sets
         resetDay();
+        // This boolean controls the main loop of the game
         gameIsRunning = true;
     }
 
+    /**
+     * Ticks one Player's turn by asking for their next action,
+     * executing the appropriate method, and outputting the
+     * response to the action attempt.
+     * This tick will not end until a move returns a non-negative
+     * integer.
+     *
+     * @param player       the Player whose turn is being ticked.
+     * @param playerNumber the number representing the Player.
+     */
     private static void tick(Player player, int playerNumber) {
         int inputCode;
+        // Output code is initialized to a negative value, so that
+        // the game will not proceed until a valid action is made
         int outputType = -1;
         while (outputType < 0) {
+            // Write the player's information and then prompt them
+            // to enter their action this turn
             screen.writePlayerInfo(player, playerNumber);
             inputCode = screen.getPlayerAction();
+            // Execute the method associated with the chosen action,
+            // and then print the response to that attempt.
             switch (inputCode) {
                 case 0:
                     outputType = move(player);
                     screen.writeResponse(inputCode, outputType);
+                    // If the player isn't already acting and moves to a set
+                    // which has an active movie, ask the player if they want
+                    // to try and take a part there
                     if (player.getCurrentRoom() instanceof Set && !player.isActing() && ((Set) player.getCurrentRoom()).getTakesLeft() > 0 && screen.attemptPart(player)) {
                         screen.writeResponse(1, takePart(player));
                     }
@@ -88,6 +132,9 @@ public class Deadwood {
                 case 3:
                     outputType = act(player);
                     screen.writeResponse(inputCode, outputType);
+                    // If the player just successfully acted their part on
+                    // a set and finished the movie, execute a check for a
+                    // bonus payout and write the response to that attempt
                     if (player.getCurrentRoom() instanceof Set && ((Set) player.getCurrentRoom()).getTakesLeft() < 1 && player.isActing()) {
                         scenesLeft--;
                         screen.writeResponse(5, checkForBonusMoney(player));
@@ -103,6 +150,13 @@ public class Deadwood {
         }
     }
 
+    /**
+     * Attempts to move the given Player to a new Room
+     * adjacent to the room they already reside in.
+     *
+     * @param player the Player that will move.
+     * @return an integer representing the outcome of this action.
+     */
     private static int move(Player player) {
         if (player.isActing()) {
             return -1;
@@ -114,18 +168,28 @@ public class Deadwood {
         }
     }
 
+    /**
+     * Attempts to give a Part to the given Player,
+     * either from the Set that they are on, or the
+     * Card on that Set.
+     *
+     * @param player the Player that will take a Part.
+     * @return an integer representing the outcome of this action.
+     */
     private static int takePart(Player player) {
         if (!(player.getCurrentRoom() instanceof Set)) {
             return -1;
         }
 
         boolean partPossible = false;
+        // Check if any part on the set is able to be taken
         for (Part part : ((Set) player.getCurrentRoom()).getParts()) {
             if (part.getLevel() <= player.getRank() && part.getPlayerOnPart() == null) {
                 partPossible = true;
                 break;
             }
         }
+        // Check if any part on the set's card is able to be taken
         for (Part part : ((Set) player.getCurrentRoom()).getCard().getParts()) {
             if (part.getLevel() <= player.getRank() && part.getPlayerOnPart() == null) {
                 partPossible = true;
@@ -140,14 +204,23 @@ public class Deadwood {
         } else if (!partPossible) {
             return -4;
         } else {
+            // Attach player to part and vice versa
             player.setCurrentPart(screen.getPart(player));
             player.getCurrentPart().setPlayerOnPart(player);
+            // Set isActing to true and isOnCard to whether or not their part exists on the set's card
             player.setActing(true);
             player.setOnCard(((Set) player.getCurrentRoom()).getCard().getParts().contains(player.getCurrentPart()));
             return 0;
         }
     }
 
+    /**
+     * Attempts a rehearsal for the given Player, to
+     * provide better chances of acting successfully.
+     *
+     * @param player the Player that will rehearse.
+     * @return an integer representing the outcome of this action.
+     */
     private static int rehearse(Player player) {
         if (!player.isActing()) {
             return -1;
@@ -155,6 +228,8 @@ public class Deadwood {
 
         Set currentSet = (Set) player.getCurrentRoom();
         int budget = currentSet.getCard().getBudget();
+
+        // Rehearsing is unnecessary when acting success is already guaranteed
         if ((budget - player.getTimesRehearsedThisScene()) < 2) {
             return 1;
         }
@@ -163,15 +238,27 @@ public class Deadwood {
         return 0;
     }
 
+    /**
+     * Attempts an acting action for the given Player,
+     * to earn currency and make progress towards their
+     * Part.
+     *
+     * @param player the Player that will act.
+     * @return an integer representing the outcome of this action.
+     */
     private static int act(Player player) {
         if (!player.isActing()) {
             return -1;
         }
 
         Set currentSet = (Set) player.getCurrentRoom();
+
+        // Find the target amount that must be rolled and then roll the dice
         int budget = currentSet.getCard().getBudget();
         int target = budget - player.getTimesRehearsedThisScene();
         int roll = Dice.roll(1)[0];
+
+        // If acting was a success give the appropriate amount of some currency
         if (roll >= target) {
             currentSet.setTakesLeft(currentSet.getTakesLeft() - 1);
             if (player.isOnCard()) {
@@ -182,6 +269,7 @@ public class Deadwood {
                 player.setCredits(1 + player.getCredits());
                 return 1;
             }
+            // If acting was a failure, give currency to extras, and do nothing for stars
         } else {
             if (!player.isOnCard()) {
                 player.setDollars(1 + player.getDollars());
@@ -192,6 +280,16 @@ public class Deadwood {
         }
     }
 
+    /**
+     * Checks if a bonus payout applies to a given Player's Set,
+     * and then applies an amount of dollars to all actors depending
+     * on their Part in the movie.
+     * This is always executed after a Player completes a movie on
+     * their current Set.
+     *
+     * @param player the Player whose Set will be checked for a bonus payout.
+     * @return an integer representing the outcome of this payout.
+     */
     private static int checkForBonusMoney(Player player) {
         // Check if a bonus applies
         boolean hasStarPlayer = false;
@@ -201,16 +299,15 @@ public class Deadwood {
                 break;
             }
         }
-
         if (!hasStarPlayer) {
             return -1;
         }
 
-        // Get array of bonus money
+        // Generate array of bonus dollars
         int[] bonus = Dice.roll(((Set) player.getCurrentRoom()).getCard().getBudget());
         Arrays.sort(bonus);
 
-        // Generate array of star players based on their part's level
+        // Generate array of star players ordered by their part's level
         Player[] orderedStars = new Player[6];
         for (Part part : ((Set) player.getCurrentRoom()).getCard().getParts()) {
             if (part.getPlayerOnPart() != null) {
@@ -218,11 +315,10 @@ public class Deadwood {
             }
         }
 
-        // Apply money to stars
+        // Apply dollars to stars in reverse order, wrapping around as necessary
         int playerPointer = orderedStars.length - 1;
         for (int i = bonus.length - 1; i >= 0; ) {
             if (orderedStars[playerPointer] != null) {
-                System.out.println("Adding " + bonus[i] + " dollars to Player playing " + orderedStars[playerPointer].getCurrentPart().getName() + ".");
                 orderedStars[playerPointer].setDollars(orderedStars[playerPointer].getDollars() + bonus[i]);
                 i--;
             }
@@ -232,15 +328,14 @@ public class Deadwood {
             }
         }
 
-        // Apply money to extras
+        // Apply dollars to extras based on their part's level
         for (Part part : ((Set) player.getCurrentRoom()).getParts()) {
             if (part.getPlayerOnPart() != null) {
-                System.out.println("Adding " + part.getLevel() + " dollars to Player playing " + orderedStars[playerPointer].getCurrentPart().getName() + ".");
                 part.getPlayerOnPart().setDollars(player.getDollars() + player.getCurrentPart().getLevel());
             }
         }
 
-        // Remove players from parts and vice versa
+        // Detach players from parts and vice versa
         for (Player playerOnSet : player.getCurrentRoom().getPlayers()) {
             playerOnSet.setActing(false);
             playerOnSet.setOnCard(false);
@@ -248,22 +343,34 @@ public class Deadwood {
             player.getCurrentPart().setPlayerOnPart(null);
             playerOnSet.setCurrentPart(null);
         }
+
         return 0;
     }
 
+    /**
+     * Attempts to upgrade the given Player's rank based on the
+     * amount of currency they have, and the rank they already are.
+     *
+     * @param player the Player that will have their rank upgraded.
+     * @return an integer representing the outcome of this action.
+     */
     private static int upgrade(Player player) {
         if (player.getCurrentRoom() != board.getCastingOffice()) {
             return -1;
         }
 
+        // Get a valid rank greater than or equal to the player's current rank that they can afford
         int newRank = screen.getRank(player);
 
+        // This occurs when the player cancels the upgrade by entering their current rank
         if (newRank < 1) {
             return -2;
         }
 
+        // Get the currency the player wishes to use to purchase their new rank
         String currency = screen.getCurrency(player, newRank);
 
+        // Remove the appropriate amount of the chosen currency from the player
         switch (currency) {
             case "credits":
                 player.setCredits(player.getCredits() - board.getUpgradeCreditPrices()[newRank - 2]);
@@ -279,14 +386,19 @@ public class Deadwood {
         return 0;
     }
 
+    /**
+     * Resets all Player's positions to the 'Trailers' Room,
+     * deals out new Cards to every Set, and resets the number
+     * of scenes left for the day.
+     */
     private static void resetDay() {
-        // Reset players
+        // Reset player positions
         for (Player player : players) {
             player.setCurrentRoom(board.getTrailers());
             player.setActing(false);
         }
 
-        // Reset sets
+        // Deal a new card to all sets
         for (Room room : board.getRooms().values()) {
             if (room instanceof Set) {
                 ((Set) room).setTakesLeft(((Set) room).getDefaultTakes());
@@ -294,18 +406,31 @@ public class Deadwood {
                 board.getDeck().remove(board.getDeck().size() - 1);
             }
         }
+
+        // Reset the number of scenes left for the day
         scenesLeft = 10;
 
+        // Output a message regarding this reset, if it isn't the first one
         if (gameIsRunning) {
             screen.writeResetMessage();
         }
     }
 
+    /**
+     * Gets the scores from every Player, stores them in
+     * an integer array, and then outputs them along with
+     * an end of game message.
+     * This is always executed at the end of the game,
+     * when there are no days left.
+     */
     private static void tallyScores() {
+        // Store player scores in an integer array
         int[] scores = new int[players.length];
         for (int i = 0; i < players.length; i++) {
             scores[i] = players[i].getScore();
         }
+
+        // Output the scores along with an end of game message
         screen.writeScores(scores);
     }
 }
