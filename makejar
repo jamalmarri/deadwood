@@ -1,0 +1,6 @@
+#!/bin/bash
+
+javac -d . src/*.java
+jar cvfe Deadwood.jar Deadwood *.class board.xml cards.xml
+rm *.class
+chmod +x Deadwood.jar
