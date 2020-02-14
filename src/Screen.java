@@ -63,6 +63,9 @@ public class Screen {
      */
     public void writeResponse(int action, int outputType) {
         writeln("");
+
+        // Action represents the action the user just attempted
+        // Output type is the return code from that action's method
         switch (action) {
             case 0:
                 switch (outputType) {
@@ -285,11 +288,14 @@ public class Screen {
     public Room getRoom(Player player) {
         writeln("");
         writeln("Which room would you like to move to?");
+
         // Print neighboring rooms of player's current room
         write("Neighboring rooms:");
         for (Room neighbor : player.getCurrentRoom().getNeighbors()) {
             write(" \"" + neighbor.getName() + "\"");
         }
+
+        // Wait for a valid room name
         writeln("");
         String input;
         while (true) {
@@ -326,11 +332,15 @@ public class Screen {
             writeln("(" + part.getLevel() + ") \"" + part.getName() + "\": \"" + part.getLine() + "\"");
         }
 
+        // Wait for a part name which represents a part that exists,
+        // isn't taken, and that the player is a high enough rank for.
         String input;
         boolean validPartName;
         while (true) {
             validPartName = false;
             input = scan.nextLine();
+
+            // Check all parts on the set's card
             for (Part part : ((Set) player.getCurrentRoom()).getCard().getParts()) {
                 if (part.getName().equals(input)) {
                     if (player.getRank() >= part.getLevel() && part.getPlayerOnPart() == null) {
@@ -346,6 +356,8 @@ public class Screen {
                     }
                 }
             }
+
+            // Check all parts on the set itself
             for (Part part : ((Set) player.getCurrentRoom()).getParts()) {
                 if (part.getName().equals(input)) {
                     if (player.getRank() >= part.getLevel() && part.getPlayerOnPart() == null) {
@@ -379,9 +391,14 @@ public class Screen {
         int rank = player.getRank();
         writeln("");
         writeln("What rank would you like to upgrade to? You are currently rank " + rank + ". Enter your current rank to cancel.");
+
+        // Print all pricing information
         for (int i = 0; i < board.getUpgradeCreditPrices().length; i++) {
             writeln("Rank " + (i + 2) + ": " + board.getUpgradeCreditPrices()[i] + " Credits or " + board.getUpgradeDollarPrices()[i] + " Dollars.");
         }
+
+        // Wait for a rank that is greater than or equal to the player's current rank
+        // that the player can afford with at least one type of currency
         while (true) {
             try {
                 rank = scan.nextInt();
@@ -392,6 +409,9 @@ public class Screen {
                 scan.nextLine();
                 continue;
             }
+
+            // If rank is equal to player's current rank, cancel the operation by
+            // returning 0.
             if (rank == player.getRank()) {
                 return 0;
             } else if (rank < player.getRank()) {
@@ -419,6 +439,9 @@ public class Screen {
     public String getCurrency(Player player, int rank) {
         writeln("What currency would you like to use to purchase this rank? (credits, dollars)");
         String currency;
+
+        // Wait for a currency name that exists and can
+        // be used to purchase the new rank
         while (true) {
             currency = scan.nextLine();
             switch (currency) {
