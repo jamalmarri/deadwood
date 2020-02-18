@@ -454,7 +454,7 @@ public class Deadwood {
 
         // Output a message regarding this reset, if it isn't the first one
         if (gameIsRunning) {
-            screen.writeResetMessage(daysLeft);
+            screen.writeResetMessage();
         }
     }
 

@@ -212,7 +212,7 @@ public class Screen {
      * Writes a message informing the user that
      * the day has been reset.
      */
-    public void writeResetMessage(int daysLeft) {
+    public void writeResetMessage() {
         writeln("------------------------------------------------------------");
         writeln("The day is over! All players have been sent back to their trailers.");
         writeln("New movies are now available in every set. Go put yourself out there!");
