@@ -127,24 +127,21 @@ public class Deadwood {
                     if (player.getCurrentRoom() instanceof Set && !player.isActing() && ((Set) player.getCurrentRoom()).getTakesLeft() > 0 && screen.attemptPart(player)) {
                         screen.writeResponse(2, takePart(player));
                     }
-                    if (outputType > -1)
-                    {
+                    if (outputType > -1) {
                         player.setWaitingForAction(false);
                     }
                     break;
                 case 2:
                     outputType = takePart(player);
                     screen.writeResponse(inputCode, outputType);
-                    if (outputType > -1)
-                    {
+                    if (outputType > -1) {
                         player.setWaitingForAction(false);
                     }
                     break;
                 case 3:
                     outputType = rehearse(player);
                     screen.writeResponse(inputCode, outputType);
-                    if (outputType > -1)
-                    {
+                    if (outputType > -1) {
                         player.setWaitingForAction(false);
                     }
                     break;
@@ -158,16 +155,14 @@ public class Deadwood {
                         scenesLeft--;
                         screen.writeResponse(7, checkForBonusMoney(player));
                     }
-                    if (outputType > -1)
-                    {
+                    if (outputType > -1) {
                         player.setWaitingForAction(false);
                     }
                     break;
                 case 5:
                     outputType = upgrade(player);
                     screen.writeResponse(inputCode, outputType);
-                    if (outputType > -1)
-                    {
+                    if (outputType > -1) {
                         player.setWaitingForAction(false);
                     }
                     break;
@@ -432,11 +427,13 @@ public class Deadwood {
     private static void resetDay() {
         // Reset player positions and statuses
         for (Player player : players) {
-            player.setActing(false);
-            player.setOnCard(false);
-            player.setTimesRehearsedThisScene(0);
-            player.getCurrentPart().setPlayerOnPart(null);
-            player.setCurrentPart(null);
+            if (gameIsRunning) {
+                player.setActing(false);
+                player.setOnCard(false);
+                player.setTimesRehearsedThisScene(0);
+                player.getCurrentPart().setPlayerOnPart(null);
+                player.setCurrentPart(null);
+            }
             player.setCurrentRoom(board.getTrailers());
         }
 
