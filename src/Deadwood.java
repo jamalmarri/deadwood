@@ -330,6 +330,14 @@ public class Deadwood {
             }
         }
         if (!hasStarPlayer) {
+            // Detach players from parts and vice versa
+            for (Player playerOnSet : player.getCurrentRoom().getPlayers()) {
+                playerOnSet.setActing(false);
+                playerOnSet.setOnCard(false);
+                playerOnSet.setTimesRehearsedThisScene(0);
+                player.getCurrentPart().setPlayerOnPart(null);
+                playerOnSet.setCurrentPart(null);
+            }
             return -1;
         }
 
