@@ -430,10 +430,14 @@ public class Deadwood {
      * of scenes left for the day.
      */
     private static void resetDay() {
-        // Reset player positions
+        // Reset player positions and statuses
         for (Player player : players) {
-            player.setCurrentRoom(board.getTrailers());
             player.setActing(false);
+            player.setOnCard(false);
+            player.setTimesRehearsedThisScene(0);
+            player.getCurrentPart().setPlayerOnPart(null);
+            player.setCurrentPart(null);
+            player.setCurrentRoom(board.getTrailers());
         }
 
         // Deal a new card to all sets
