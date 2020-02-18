@@ -215,11 +215,7 @@ public class Screen {
     public void writeResetMessage(int daysLeft) {
         writeln("------------------------------------------------------------");
         writeln("The day is over! All players have been sent back to their trailers.");
-        if (daysLeft == 0) {
-            writeln("");
-        } else {
-            writeln("New movies are now available in every set. Go put yourself out there!");
-        }
+        writeln("New movies are now available in every set. Go put yourself out there!");
     }
 
     /**

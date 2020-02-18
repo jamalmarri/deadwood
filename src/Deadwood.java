@@ -33,11 +33,11 @@ public class Deadwood {
                 tick(players[i], i + 1);
                 if (scenesLeft < 2) {
                     daysLeft--;
+                    if (daysLeft < 1) {
+                        gameIsRunning = false;
+                        break;
+                    }
                     resetDay();
-                }
-                if (daysLeft < 1) {
-                    gameIsRunning = false;
-                    break;
                 }
             }
         }
