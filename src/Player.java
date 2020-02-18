@@ -12,6 +12,7 @@ public class Player {
     private int dollars;
     private int credits;
     private int rank;
+    private boolean waitingForAction;
     private boolean isActing;
     private boolean isOnCard;
     private Part currentPart;
@@ -201,6 +202,26 @@ public class Player {
      */
     public void setCurrentPart(Part currentPart) {
         this.currentPart = currentPart;
+    }
+
+    /**
+     * Gets whether or not this Player has already performed an action during this turn,
+     * used to ensure this Player doesn't perform more than one action.
+     *
+     * @return the boolean that represents whether this Player is waiting for an action to be performed.
+     */
+    public boolean isWaitingForAction() {
+        return waitingForAction;
+    }
+
+    /**
+     * Sets whether or not this Player has already performed an action during this turn,
+     * used after this Player has performed an action in the game.
+     *
+     * @param waitingForAction the boolean that represents whether this Player is waiting for an action to be performed.
+     */
+    public void setWaitingForAction(boolean waitingForAction) {
+        this.waitingForAction = waitingForAction;
     }
 
     /**

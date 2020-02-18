@@ -99,19 +99,26 @@ public class Deadwood {
      * @param playerNumber the number representing the Player.
      */
     private static void tick(Player player, int playerNumber) {
+        player.setWaitingForAction(true);
         int inputCode;
         // Output code is initialized to a negative value, so that
         // the game will not proceed until a valid action is made
-        int outputType = -1;
-        while (outputType < 0) {
+        int outputType;
+        while (true) {
             // Write the player's information and then prompt them
             // to enter their action this turn
-            screen.writePlayerInfo(player, playerNumber);
-            inputCode = screen.getPlayerAction();
+            if (player.isWaitingForAction()) {
+                screen.writePlayerInfo(player, playerNumber);
+            }
+            inputCode = screen.getPlayerAction(player);
+
             // Execute the method associated with the chosen action,
             // and then print the response to that attempt.
             switch (inputCode) {
                 case 0:
+                    screen.listPlayers(players);
+                    break;
+                case 1:
                     outputType = move(player);
                     screen.writeResponse(inputCode, outputType);
                     // If the player isn't already acting and moves to a set
@@ -120,16 +127,19 @@ public class Deadwood {
                     if (player.getCurrentRoom() instanceof Set && !player.isActing() && ((Set) player.getCurrentRoom()).getTakesLeft() > 0 && screen.attemptPart(player)) {
                         screen.writeResponse(1, takePart(player));
                     }
-                    break;
-                case 1:
-                    outputType = takePart(player);
-                    screen.writeResponse(inputCode, outputType);
+                    player.setWaitingForAction(false);
                     break;
                 case 2:
-                    outputType = rehearse(player);
+                    outputType = takePart(player);
                     screen.writeResponse(inputCode, outputType);
+                    player.setWaitingForAction(false);
                     break;
                 case 3:
+                    outputType = rehearse(player);
+                    screen.writeResponse(inputCode, outputType);
+                    player.setWaitingForAction(false);
+                    break;
+                case 4:
                     outputType = act(player);
                     screen.writeResponse(inputCode, outputType);
                     // If the player just successfully acted their part on
@@ -137,13 +147,18 @@ public class Deadwood {
                     // bonus payout and write the response to that attempt
                     if (player.getCurrentRoom() instanceof Set && ((Set) player.getCurrentRoom()).getTakesLeft() < 1 && player.isActing()) {
                         scenesLeft--;
-                        screen.writeResponse(5, checkForBonusMoney(player));
+                        screen.writeResponse(7, checkForBonusMoney(player));
                     }
+                    player.setWaitingForAction(false);
                     break;
-                case 4:
+                case 5:
                     outputType = upgrade(player);
                     screen.writeResponse(inputCode, outputType);
+                    player.setWaitingForAction(false);
                     break;
+                case 6:
+                    screen.writeResponse(inputCode, 0);
+                    return;
                 default:
                     break;
             }

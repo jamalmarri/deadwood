@@ -55,8 +55,8 @@ public class Screen {
     }
 
     /**
-     * Writes the appropriate response to a given move
-     * that the Player makes, using the given output type.
+     * Writes the appropriate response to a given action
+     * that the Player takes, using the given output type.
      *
      * @param action     the action that was performed to initiate this response.
      * @param outputType the type of output to be written.
@@ -67,7 +67,7 @@ public class Screen {
         // Action represents the action the user just attempted
         // Output type is the return code from that action's method
         switch (action) {
-            case 0:
+            case 1:
                 switch (outputType) {
                     case -1:
                         writeln("You cannot move rooms while in a movie.");
@@ -79,7 +79,7 @@ public class Screen {
                         break;
                 }
                 break;
-            case 1:
+            case 2:
                 switch (outputType) {
                     case -4:
                         writeln("There are no parts you can take in this movie.");
@@ -100,7 +100,7 @@ public class Screen {
                         break;
                 }
                 break;
-            case 2:
+            case 3:
                 switch (outputType) {
                     case -1:
                         writeln("You are not currently in a movie.");
@@ -115,7 +115,7 @@ public class Screen {
                         break;
                 }
                 break;
-            case 3:
+            case 4:
                 switch (outputType) {
                     case -1:
                         writeln("You are not currently in a movie.");
@@ -136,7 +136,7 @@ public class Screen {
                         break;
                 }
                 break;
-            case 4:
+            case 5:
                 switch (outputType) {
                     case -2:
                         writeln("You cancelled your upgrade.");
@@ -151,7 +151,10 @@ public class Screen {
                         break;
                 }
                 break;
-            case 5:
+            case 6:
+                writeln("You ended your turn!");
+                break;
+            case 7:
                 if (outputType == 0) {
                     writeln("Bonus money was given to all players on set!");
                 }
@@ -159,6 +162,19 @@ public class Screen {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * Lists all Players and their positions on the Board.
+     *
+     * @param players all of the Players represented by a Player array.
+     */
+    public void listPlayers(Player[] players) {
+        writeln("");
+        writeln("All player positions:");
+        for (int i = 0; i < players.length; i++) {
+            writeln("Player " + (i + 1) + " is currently at: " + players[i].getCurrentRoom().getName());
         }
     }
 
@@ -250,30 +266,56 @@ public class Screen {
      * Writes a prompt for the user to input their next action
      * for the current turn, then waits for valid input to return.
      *
+     * @param player the Player that will perform the chosen action.
      * @return the integer code representing a valid action.
      */
-    public int getPlayerAction() {
+    public int getPlayerAction(Player player) {
         writeln("");
         writeln("What would you like to do?");
-        writeln("(move, take, rehearse, act, upgrade)");
+        writeln("(list, move, take, rehearse, act, upgrade, end)");
         String input;
         while (true) {
             input = scan.nextLine();
-            switch (input) {
-                case "move":
-                    return 0;
-                case "take":
-                    return 1;
-                case "rehearse":
-                    return 2;
-                case "act":
-                    return 3;
-                case "upgrade":
-                    return 4;
-                default:
-                    writeln("");
-                    write("Invalid action. Please try again: ");
-                    break;
+            if (player.isWaitingForAction()) {
+                switch (input) {
+                    case "list":
+                        return 0;
+                    case "move":
+                        return 1;
+                    case "take":
+                        return 2;
+                    case "rehearse":
+                        return 3;
+                    case "act":
+                        return 4;
+                    case "upgrade":
+                        return 5;
+                    case "end":
+                        return 6;
+                    default:
+                        writeln("");
+                        write("Invalid action. Please try again: ");
+                        break;
+                }
+            } else {
+                switch (input) {
+                    case "list":
+                        return 0;
+                    case "move":
+                    case "take":
+                    case "rehearse":
+                    case "act":
+                    case "upgrade":
+                        writeln("");
+                        write("You've already performed an action this turn. Please try again: ");
+                        break;
+                    case "end":
+                        return 6;
+                    default:
+                        writeln("");
+                        write("Invalid action. Please try again: ");
+                        break;
+                }
             }
         }
     }
