@@ -125,7 +125,7 @@ public class Deadwood {
                     // which has an active movie, ask the player if they want
                     // to try and take a part there
                     if (player.getCurrentRoom() instanceof Set && !player.isActing() && ((Set) player.getCurrentRoom()).getTakesLeft() > 0 && screen.attemptPart(player)) {
-                        screen.writeResponse(1, takePart(player));
+                        screen.writeResponse(2, takePart(player));
                     }
                     if (outputType > -1)
                     {
