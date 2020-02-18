@@ -102,14 +102,14 @@ public class Screen {
                 break;
             case 3:
                 switch (outputType) {
+                    case -2:
+                        writeln("You don't need to rehearse. Your acting success is already guaranteed.");
+                        break;
                     case -1:
                         writeln("You are not currently in a movie.");
                         break;
                     case 0:
                         writeln("You rehearsed for your part!");
-                        break;
-                    case 1:
-                        writeln("You don't need to rehearse. Your acting success is already guaranteed.");
                         break;
                     default:
                         break;

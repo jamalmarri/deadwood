@@ -127,17 +127,26 @@ public class Deadwood {
                     if (player.getCurrentRoom() instanceof Set && !player.isActing() && ((Set) player.getCurrentRoom()).getTakesLeft() > 0 && screen.attemptPart(player)) {
                         screen.writeResponse(1, takePart(player));
                     }
-                    player.setWaitingForAction(false);
+                    if (outputType > -1)
+                    {
+                        player.setWaitingForAction(false);
+                    }
                     break;
                 case 2:
                     outputType = takePart(player);
                     screen.writeResponse(inputCode, outputType);
-                    player.setWaitingForAction(false);
+                    if (outputType > -1)
+                    {
+                        player.setWaitingForAction(false);
+                    }
                     break;
                 case 3:
                     outputType = rehearse(player);
                     screen.writeResponse(inputCode, outputType);
-                    player.setWaitingForAction(false);
+                    if (outputType > -1)
+                    {
+                        player.setWaitingForAction(false);
+                    }
                     break;
                 case 4:
                     outputType = act(player);
@@ -149,12 +158,18 @@ public class Deadwood {
                         scenesLeft--;
                         screen.writeResponse(7, checkForBonusMoney(player));
                     }
-                    player.setWaitingForAction(false);
+                    if (outputType > -1)
+                    {
+                        player.setWaitingForAction(false);
+                    }
                     break;
                 case 5:
                     outputType = upgrade(player);
                     screen.writeResponse(inputCode, outputType);
-                    player.setWaitingForAction(false);
+                    if (outputType > -1)
+                    {
+                        player.setWaitingForAction(false);
+                    }
                     break;
                 case 6:
                     screen.writeResponse(inputCode, 0);
@@ -246,7 +261,7 @@ public class Deadwood {
 
         // Rehearsing is unnecessary when acting success is already guaranteed
         if ((budget - player.getTimesRehearsedThisScene()) < 2) {
-            return 1;
+            return -2;
         }
 
         player.setTimesRehearsedThisScene(player.getTimesRehearsedThisScene() + 1);
