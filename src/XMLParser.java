@@ -32,6 +32,8 @@ import static java.lang.Integer.parseInt;
  * @see HashSet
  */
 public class XMLParser {
+    private static boolean objectExists = false;
+    private static XMLParser xmlParser;
     private final File cardsXML;
     private final File boardXML;
     private final DocumentBuilderFactory dbFactory;
@@ -39,10 +41,18 @@ public class XMLParser {
     /**
      * Class constructor.
      */
-    public XMLParser() {
+    private XMLParser() {
         cardsXML = new File("cards.xml");
         boardXML = new File("board.xml");
         dbFactory = DocumentBuilderFactory.newInstance();
+    }
+
+    public static XMLParser getInstance() {
+        if (!objectExists) {
+            xmlParser = new XMLParser();
+            objectExists = true;
+        }
+        return xmlParser;
     }
 
     /**

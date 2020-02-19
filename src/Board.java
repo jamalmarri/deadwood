@@ -10,9 +10,11 @@ import java.util.HashSet;
  * 'Trailers' and 'Casting Office' Rooms.
  */
 public class Board {
+    private static boolean objectExists = false;
+    private static Board board;
     private final Room trailers = new Room("Trailers", new HashSet<>());
     private final Room castingOffice = new Room("Casting Office", new HashSet<>());
-    private final XMLParser parser = new XMLParser();
+    private final XMLParser parser = XMLParser.getInstance();
     private int[] upgradeCreditPrices;
     private int[] upgradeDollarPrices;
     private ArrayList<Card> deck;
@@ -24,13 +26,21 @@ public class Board {
      * Room information from the game's XML
      * files.
      */
-    public Board() {
+    private Board() {
         // Initialize deck
         initCards();
         // Initialize rooms
         initRooms();
         // Initialize upgrade prices
         initPrices();
+    }
+
+    public static Board getInstance() {
+        if (!objectExists) {
+            board = new Board();
+            objectExists = true;
+        }
+        return board;
     }
 
     /**

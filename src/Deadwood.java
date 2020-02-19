@@ -12,8 +12,9 @@ import java.util.Arrays;
  * @see Player
  */
 public class Deadwood {
-    private static final Board board = new Board();
-    private static final Screen screen = new Screen(board);
+    private static final Board board = Board.getInstance();
+    private static final Dice dice = Dice.getInstance();
+    private static final Screen screen = Screen.getInstance();
     private static Player[] players;
     private static int scenesLeft;
     private static int daysLeft;
@@ -281,7 +282,7 @@ public class Deadwood {
         // Find the target amount that must be rolled and then roll the dice
         int budget = currentSet.getCard().getBudget();
         int target = budget - player.getTimesRehearsedThisScene();
-        int roll = Dice.roll(1)[0];
+        int roll = dice.roll(1)[0];
 
         // If acting was a success give the appropriate amount of some currency
         if (roll >= target) {
@@ -339,7 +340,7 @@ public class Deadwood {
         }
 
         // Generate array of bonus dollars
-        int[] bonus = Dice.roll(((Set) player.getCurrentRoom()).getCard().getBudget());
+        int[] bonus = dice.roll(((Set) player.getCurrentRoom()).getCard().getBudget());
         Arrays.sort(bonus);
 
         // Generate array of star players ordered by their part's level
@@ -397,7 +398,7 @@ public class Deadwood {
         }
 
         // Get a valid rank greater than or equal to the player's current rank that they can afford
-        int newRank = screen.getRank(player);
+        int newRank = screen.getRank(player, board.getUpgradeCreditPrices(), board.getUpgradeDollarPrices());
 
         // This occurs when the player cancels the upgrade by entering their current rank
         if (newRank < 1) {
@@ -405,7 +406,7 @@ public class Deadwood {
         }
 
         // Get the currency the player wishes to use to purchase their new rank
-        String currency = screen.getCurrency(player, newRank);
+        String currency = screen.getCurrency(player, newRank, board.getUpgradeCreditPrices(), board.getUpgradeDollarPrices());
 
         // Remove the appropriate amount of the chosen currency from the player
         switch (currency) {

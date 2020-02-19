@@ -6,17 +6,23 @@ import java.util.Scanner;
  * with, and handles all input and output for the game.
  */
 public class Screen {
-    protected Scanner scan;
-    private Board board;
+    private static boolean objectExists = false;
+    private static Screen screen;
+    private final Scanner scan;
 
     /**
      * Class constructor.
-     *
-     * @param board the Board belonging to the game that this Screen is handling the I/O of.
      */
-    public Screen(Board board) {
+    private Screen() {
         scan = new Scanner(System.in);
-        this.board = board;
+    }
+
+    public static Screen getInstance() {
+        if (!objectExists) {
+            screen = new Screen();
+            objectExists = true;
+        }
+        return screen;
     }
 
     /**
@@ -429,14 +435,14 @@ public class Screen {
      * @param player the Player whose rank will be upgraded.
      * @return the integer representing a valid rank.
      */
-    public int getRank(Player player) {
+    public int getRank(Player player, int[] creditPrices, int[] dollarPrices) {
         int rank = player.getRank();
         writeln("");
         writeln("What rank would you like to upgrade to? You are currently rank " + rank + ". Enter your current rank to cancel.");
 
         // Print all pricing information
-        for (int i = 0; i < board.getUpgradeCreditPrices().length; i++) {
-            writeln("Rank " + (i + 2) + ": " + board.getUpgradeCreditPrices()[i] + " Credits or " + board.getUpgradeDollarPrices()[i] + " Dollars.");
+        for (int i = 0; i < creditPrices.length; i++) {
+            writeln("Rank " + (i + 2) + ": " + creditPrices[i] + " Credits or " + dollarPrices[i] + " Dollars.");
         }
 
         // Wait for a rank that is greater than or equal to the player's current rank
@@ -461,7 +467,7 @@ public class Screen {
                 write("Your rank is already higher than the chosen rank. Please try again: ");
             } else {
                 writeln("");
-                if (player.getCredits() < board.getUpgradeCreditPrices()[rank - 2] && player.getDollars() < board.getUpgradeDollarPrices()[rank - 2]) {
+                if (player.getCredits() < creditPrices[rank - 2] && player.getDollars() < dollarPrices[rank - 2]) {
                     write("You don't have enough credits or dollars for that rank. Please try again: ");
                 } else {
                     return rank;
@@ -478,7 +484,7 @@ public class Screen {
      * @param rank   the rank the Player will upgrade to.
      * @return the String representing the currency the Player will use.
      */
-    public String getCurrency(Player player, int rank) {
+    public String getCurrency(Player player, int rank, int[] creditPrices, int[] dollarPrices) {
         writeln("What currency would you like to use to purchase this rank? (credits, dollars)");
         String currency;
 
@@ -488,7 +494,7 @@ public class Screen {
             currency = scan.nextLine();
             switch (currency) {
                 case "credits":
-                    if (player.getCredits() >= board.getUpgradeCreditPrices()[rank - 2]) {
+                    if (player.getCredits() >= creditPrices[rank - 2]) {
                         return currency;
                     } else {
                         writeln("");
@@ -496,7 +502,7 @@ public class Screen {
                     }
                     break;
                 case "dollars":
-                    if (player.getDollars() >= board.getUpgradeDollarPrices()[rank - 2]) {
+                    if (player.getDollars() >= dollarPrices[rank - 2]) {
                         return currency;
                     } else {
                         writeln("");
