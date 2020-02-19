@@ -327,13 +327,13 @@ public class Deadwood {
         if (!hasStarPlayer) {
             // Detach players from parts and vice versa
             for (Player playerOnSet : player.getCurrentRoom().getPlayers()) {
-            	if (playerOnSet.isActing()) {
-                	playerOnSet.setActing(false);
-                	playerOnSet.setOnCard(false);
-                	playerOnSet.setTimesRehearsedThisScene(0);
-                	playerOnSet.getCurrentPart().setPlayerOnPart(null);
-                	playerOnSet.setCurrentPart(null);
-            	}
+                if (playerOnSet.isActing()) {
+                    playerOnSet.setActing(false);
+                    playerOnSet.setOnCard(false);
+                    playerOnSet.setTimesRehearsedThisScene(0);
+                    playerOnSet.getCurrentPart().setPlayerOnPart(null);
+                    playerOnSet.setCurrentPart(null);
+                }
             }
             return -1;
         }
@@ -373,11 +373,11 @@ public class Deadwood {
         // Detach players from parts and vice versa
         for (Player playerOnSet : player.getCurrentRoom().getPlayers()) {
             if (playerOnSet.isActing()) {
-            	playerOnSet.setActing(false);
-            	playerOnSet.setOnCard(false);
-            	playerOnSet.setTimesRehearsedThisScene(0);
-            	playerOnSet.getCurrentPart().setPlayerOnPart(null);
-            	playerOnSet.setCurrentPart(null);
+                playerOnSet.setActing(false);
+                playerOnSet.setOnCard(false);
+                playerOnSet.setTimesRehearsedThisScene(0);
+                playerOnSet.getCurrentPart().setPlayerOnPart(null);
+                playerOnSet.setCurrentPart(null);
             }
         }
 
@@ -431,13 +431,11 @@ public class Deadwood {
     private static void resetDay() {
         // Reset player positions and statuses
         for (Player player : players) {
-            if (gameIsRunning) {
+            if (gameIsRunning && player.isActing()) {
                 player.setActing(false);
                 player.setOnCard(false);
                 player.setTimesRehearsedThisScene(0);
-                if (player.isActing()) {
-                	player.getCurrentPart().setPlayerOnPart(null);
-                }
+                player.getCurrentPart().setPlayerOnPart(null);
                 player.setCurrentPart(null);
             }
             player.setCurrentRoom(board.getTrailers());
