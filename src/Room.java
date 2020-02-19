@@ -12,7 +12,7 @@ import java.util.HashSet;
 public class Room {
     private final String name;
     private final HashSet<Room> neighbors;
-    private HashSet<Player> players;
+    private final HashSet<Player> players;
 
     /**
      * Class constructor.
