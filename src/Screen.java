@@ -17,6 +17,11 @@ public class Screen {
         scan = new Scanner(System.in);
     }
 
+    /**
+     * Ensures exactly one Screen exists and returns it.
+     *
+     * @return this singleton Screen object.
+     */
     public static Screen getInstance() {
         if (!objectExists) {
             screen = new Screen();
@@ -432,7 +437,9 @@ public class Screen {
      * Writes a prompt for the user to input the rank they would
      * like to upgrade to, then waits for valid input to return.
      *
-     * @param player the Player whose rank will be upgraded.
+     * @param player       the Player whose rank will be upgraded.
+     * @param creditPrices the integer array representing the credit prices for upgrades.
+     * @param dollarPrices the integer array representing the dollar prices for upgrades.
      * @return the integer representing a valid rank.
      */
     public int getRank(Player player, int[] creditPrices, int[] dollarPrices) {
@@ -480,8 +487,10 @@ public class Screen {
      * Writes a prompt for the user to input the currency they wish
      * to use for their upgrade, then waits for valid input to return.
      *
-     * @param player the Player whose rank will be upgraded.
-     * @param rank   the rank the Player will upgrade to.
+     * @param player       the Player whose rank will be upgraded.
+     * @param rank         the rank the Player will upgrade to.
+     * @param creditPrices the integer array representing the credit prices for upgrades.
+     * @param dollarPrices the integer array representing the dollar prices for upgrades.
      * @return the String representing the currency the Player will use.
      */
     public String getCurrency(Player player, int rank, int[] creditPrices, int[] dollarPrices) {
