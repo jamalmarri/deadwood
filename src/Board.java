@@ -35,6 +35,11 @@ public class Board {
         initPrices();
     }
 
+    /**
+     * Ensures exactly one Board exists and returns it.
+     *
+     * @return this singleton Board object.
+     */
     public static Board getInstance() {
         if (!objectExists) {
             board = new Board();
