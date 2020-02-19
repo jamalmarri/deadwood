@@ -92,7 +92,7 @@ public class XMLParser {
                     // Initialize all card information variables using card attributes and child nodes
                     cardName = cardElement.getAttribute("name");
                     sceneNumber = parseInt(cardElement.getElementsByTagName("scene").item(0).getAttributes().getNamedItem("number").getTextContent());
-                    description = cardElement.getElementsByTagName("scene").item(0).getTextContent().strip();
+                    description = cardElement.getElementsByTagName("scene").item(0).getTextContent().trim();
                     budget = parseInt(cardElement.getAttribute("budget"));
 
                     // Declare and initialize new card using card information variables
