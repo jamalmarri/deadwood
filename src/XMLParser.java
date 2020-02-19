@@ -47,6 +47,11 @@ public class XMLParser {
         dbFactory = DocumentBuilderFactory.newInstance();
     }
 
+    /**
+     * Ensures exactly one XMLParser exists and returns it.
+     *
+     * @return this singleton XMLParser object.
+     */
     public static XMLParser getInstance() {
         if (!objectExists) {
             xmlParser = new XMLParser();
