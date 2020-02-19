@@ -327,11 +327,13 @@ public class Deadwood {
         if (!hasStarPlayer) {
             // Detach players from parts and vice versa
             for (Player playerOnSet : player.getCurrentRoom().getPlayers()) {
-                playerOnSet.setActing(false);
-                playerOnSet.setOnCard(false);
-                playerOnSet.setTimesRehearsedThisScene(0);
-                player.getCurrentPart().setPlayerOnPart(null);
-                playerOnSet.setCurrentPart(null);
+            	if (playerOnSet.isActing()) {
+                	playerOnSet.setActing(false);
+                	playerOnSet.setOnCard(false);
+                	playerOnSet.setTimesRehearsedThisScene(0);
+                	playerOnSet.getCurrentPart().setPlayerOnPart(null);
+                	playerOnSet.setCurrentPart(null);
+            	}
             }
             return -1;
         }
@@ -370,11 +372,13 @@ public class Deadwood {
 
         // Detach players from parts and vice versa
         for (Player playerOnSet : player.getCurrentRoom().getPlayers()) {
-            playerOnSet.setActing(false);
-            playerOnSet.setOnCard(false);
-            playerOnSet.setTimesRehearsedThisScene(0);
-            player.getCurrentPart().setPlayerOnPart(null);
-            playerOnSet.setCurrentPart(null);
+            if (playerOnSet.isActing()) {
+            	playerOnSet.setActing(false);
+            	playerOnSet.setOnCard(false);
+            	playerOnSet.setTimesRehearsedThisScene(0);
+            	playerOnSet.getCurrentPart().setPlayerOnPart(null);
+            	playerOnSet.setCurrentPart(null);
+            }
         }
 
         return 0;
@@ -431,7 +435,9 @@ public class Deadwood {
                 player.setActing(false);
                 player.setOnCard(false);
                 player.setTimesRehearsedThisScene(0);
-                player.getCurrentPart().setPlayerOnPart(null);
+                if (player.isActing()) {
+                	player.getCurrentPart().setPlayerOnPart(null);
+                }
                 player.setCurrentPart(null);
             }
             player.setCurrentRoom(board.getTrailers());
