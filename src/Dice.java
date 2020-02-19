@@ -14,10 +14,18 @@ public class Dice {
     private static Dice dice;
     private static Random r;
 
+    /**
+     * Class constructor.
+     */
     private Dice() {
         r = new Random();
     }
 
+    /**
+     * Ensures exactly one Dice exists and returns it.
+     *
+     * @return this singleton Dice object.
+     */
     public static Dice getInstance() {
         if (!objectExists) {
             dice = new Dice();
