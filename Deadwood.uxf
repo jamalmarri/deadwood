@@ -355,9 +355,9 @@ _-tallyScores(): void_</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>952</x>
-      <y>98</y>
+      <y>91</y>
       <w>287</w>
-      <h>245</h>
+      <h>252</h>
     </coordinates>
     <panel_attributes>Screen
 --
@@ -371,6 +371,7 @@ _-screen: Screen_
 +writePlayerInfo(Player: player, int: playerNumber): void
 +writeResponse(int: action, int: outputType): void
 +attemptPart(Player: player): boolean
++attemptUpgrade(Player: player): boolean
 +writeResetMessage(): void
 +writeScores(int[]: scores): void
 +getPlayerCount(): int
