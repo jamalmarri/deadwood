@@ -220,6 +220,33 @@ public class Screen {
     }
 
     /**
+     * Writes a prompt for the user to input whether or
+     * not they want to try to upgrade in the same turn
+     * that they have moved.
+     *
+     * @param player the Player that will attempt to upgrade.
+     * @return whether or not the user inputted 'yes'.
+     */
+    public boolean attemptUpgrade(Player player) {
+        writeln("Would you like to upgrade this turn (yes, no)?");
+        String input;
+        while (true) {
+            input = scan.nextLine();
+            switch (input) {
+                case "yes":
+                    writeln("");
+                    return true;
+                case "no":
+                    writeln("");
+                    return false;
+                default:
+                    writeln("");
+                    write("Invalid input. Please try again: ");
+            }
+        }
+    }
+
+    /**
      * Writes a message informing the user that
      * the day has been reset.
      */

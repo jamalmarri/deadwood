@@ -128,6 +128,11 @@ public class Deadwood {
                     if (player.getCurrentRoom() instanceof Set && !player.isActing() && ((Set) player.getCurrentRoom()).getTakesLeft() > 0 && screen.attemptPart(player)) {
                         screen.writeResponse(2, takePart(player));
                     }
+                    // If the player moves to the casting office, they can
+                    // try to upgrade in the same turn
+                    if (player.getCurrentRoom() == board.getCastingOffice() && !player.isActing() && screen.attemptUpgrade(player)) {
+                        screen.writeResponse(5, upgrade(player));
+                    }
                     if (outputType > -1) {
                         player.setWaitingForAction(false);
                     }
