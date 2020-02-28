@@ -1,8 +1,0 @@
-#!/bin/bash
-
-javac -d . src/*.java
-jar cvfe Deadwood.jar Deadwood *.class
-rm *.class
-chmod +x Deadwood.jar
-zip -q Deadwood.zip Deadwood.jar cards.xml board.xml
-rm Deadwood.jar
