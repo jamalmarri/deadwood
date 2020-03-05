@@ -84,13 +84,6 @@ public class XMLParser {
             int budget;
             String pathToCard;
 
-            // Declare card part variables
-            String partName;
-            int level;
-            int x;
-            int y;
-            int diceSize;
-
             // Initialize deck as new ArrayList
             deck = new ArrayList<>();
 
@@ -114,27 +107,7 @@ public class XMLParser {
 
                     // Declare and initialize node list of parts
                     NodeList parts = cardElement.getElementsByTagName("part");
-
-                    // For every part node in parts node list
-                    for (int j = 0; j < parts.getLength(); j++) {
-
-                        // Cast node as an element if possible
-                        if (parts.item(j).getNodeType() == Node.ELEMENT_NODE) {
-                            Element partElement = (Element) parts.item(j);
-
-                            // Initialize all part information variables using part attributes and child nodes
-                            partName = partElement.getAttribute("name");
-                            level = Integer.parseInt(partElement.getAttribute("level"));
-
-                            Element partArea = (Element) partElement.getElementsByTagName("area").item(0);
-                            x = Integer.parseInt(partArea.getAttribute("x"));
-                            y = Integer.parseInt(partArea.getAttribute("y"));
-                            diceSize = Integer.parseInt(partArea.getAttribute("h"));
-
-                            // Add part to card's 'parts' HashSet
-                            card.addPart(new Part(partName, level, x, y, diceSize));
-                        }
-                    }
+                    addParts(card, parts);
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -183,13 +156,6 @@ public class XMLParser {
             int[] takeXValues;
             int[] takeYValues;
 
-            // Declare part variables
-            String partName;
-            int level;
-            int partX;
-            int partY;
-            int diceSize;
-
             // Initialize sets as new HashMap
             sets = new HashMap<>();
 
@@ -231,27 +197,7 @@ public class XMLParser {
 
                     // Declare and initialize node list of parts
                     NodeList parts = setElement.getElementsByTagName("part");
-
-                    // For every part node in parts node list
-                    for (int j = 0; j < parts.getLength(); j++) {
-
-                        // Cast node as an element if possible
-                        if (parts.item(j).getNodeType() == Node.ELEMENT_NODE) {
-                            Element partElement = (Element) parts.item(j);
-
-                            // Initialize all part information variables using part attributes and child nodes
-                            partName = partElement.getAttribute("name");
-                            level = Integer.parseInt(partElement.getAttribute("level"));
-
-                            Element partArea = (Element) partElement.getElementsByTagName("area").item(0);
-                            partX = Integer.parseInt(partArea.getAttribute("x"));
-                            partY = Integer.parseInt(partArea.getAttribute("y"));
-                            diceSize = Integer.parseInt(partArea.getAttribute("h"));
-
-                            // Add part to set's 'parts' HashSet
-                            set.addPart(new Part(partName, level, partX, partY, diceSize));
-                        }
-                    }
+                    addParts(set, parts);
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -260,6 +206,40 @@ public class XMLParser {
         }
 
         return sets;
+    }
+
+    private void addParts(Object parent, NodeList parts) {
+        // Declare part variables
+        String partName;
+        int level;
+        int partX;
+        int partY;
+        int diceSize;
+
+        // For every part node in parts node list
+        for (int j = 0; j < parts.getLength(); j++) {
+
+            // Cast node as an element if possible
+            if (parts.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                Element partElement = (Element) parts.item(j);
+
+                // Initialize all part information variables using part attributes and child nodes
+                partName = partElement.getAttribute("name");
+                level = Integer.parseInt(partElement.getAttribute("level"));
+
+                Element partArea = (Element) partElement.getElementsByTagName("area").item(0);
+                partX = Integer.parseInt(partArea.getAttribute("x"));
+                partY = Integer.parseInt(partArea.getAttribute("y"));
+                diceSize = Integer.parseInt(partArea.getAttribute("h"));
+
+                // Add part to object's 'parts' HashSet
+                if (parent instanceof Set) {
+                    ((Set) parent).addPart(new Part(partName, level, partX, partY, diceSize));
+                } else {
+                    ((Card) parent).addPart(new Part(partName, level, partX, partY, diceSize));
+                }
+            }
+        }
     }
 
     /**
