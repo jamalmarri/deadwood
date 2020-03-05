@@ -52,6 +52,8 @@ public class Deadwood {
     @FXML
     private MenuButton upgradeMenu;
     @FXML
+    private Button endButton;
+    @FXML
     private ImageView dice1;
     @FXML
     private ImageView dice2;
@@ -119,12 +121,22 @@ public class Deadwood {
             if (currentPlayer > -1) {
                 players[i].getCurrentRoom().removePlayer(players[i]);
             }
+
             players[i].setCurrentRoom(board.getTrailers());
             players[i].getCurrentRoom().addPlayer(players[i]);
-            detachParts(players[i]);
+            if (players[i].isActing()) {
+                players[i].setActing(false);
+                players[i].setOnCard(false);
+                players[i].setTimesRehearsedThisScene(0);
+                players[i].getCurrentPart().setPlayerOnPart(null);
+                players[i].setCurrentPart(null);
+            }
             players[i].setMoved(false);
             players[i].setWaitingForAction(true);
+
             ImageView diceView = (ImageView) playersPane.getChildren().get(i);
+            diceView.setFitWidth(20);
+            diceView.setFitHeight(20);
             diceView.setX(i * 20 + players[i].getCurrentRoom().getX());
             diceView.setY(players[i].getCurrentRoom().getY());
         }
@@ -136,6 +148,8 @@ public class Deadwood {
         for (Room room : board.getRooms().values()) {
             if (room instanceof Set) {
                 Set set = (Set) room;
+                set.setTakesLeft(set.getDefaultTakes());
+
                 Card card = board.getDeck().remove(board.getDeck().size() - 1);
                 set.setCard(card);
 
@@ -147,8 +161,9 @@ public class Deadwood {
         }
         scenesLeft = 10;
 
-        end();
-        tick();
+        if (currentPlayer < 0) {
+            end();
+        }
     }
 
     private void detachParts(Player player) {
@@ -180,7 +195,8 @@ public class Deadwood {
         upgradeMenu.getItems().clear();
 
         moveMenu.setDisable(players[currentPlayer].isActing()
-                | players[currentPlayer].hasMoved());
+                | players[currentPlayer].hasMoved()
+                | players[currentPlayer].isNotWaitingForAction());
         if (players[currentPlayer].getCurrentRoom() instanceof Set) {
             takeMenu.setDisable(players[currentPlayer].isActing()
                     | !(players[currentPlayer].getCurrentRoom() instanceof Set)
@@ -211,22 +227,10 @@ public class Deadwood {
         if (!takeMenu.isDisabled()) {
             boolean noPartAvailable = true;
             for (Part part : ((Set) players[currentPlayer].getCurrentRoom()).getParts()) {
-                if (part.getLevel() <= players[currentPlayer].getRank()
-                        && part.getPlayerOnPart() == null) {
-                    noPartAvailable = false;
-                    MenuItem partItem = new MenuItem(part.getName());
-                    partItem.setOnAction(actionEvent -> take(partItem.getText()));
-                    takeMenu.getItems().add(partItem);
-                }
+                noPartAvailable = isNoPartAvailable(noPartAvailable, part);
             }
             for (Part part : ((Set) players[currentPlayer].getCurrentRoom()).getCard().getParts()) {
-                if (part.getLevel() <= players[currentPlayer].getRank()
-                        && part.getPlayerOnPart() == null) {
-                    noPartAvailable = false;
-                    MenuItem partItem = new MenuItem(part.getName());
-                    partItem.setOnAction(actionEvent -> take(partItem.getText()));
-                    takeMenu.getItems().add(partItem);
-                }
+                noPartAvailable = isNoPartAvailable(noPartAvailable, part);
             }
             takeMenu.setDisable(noPartAvailable);
         }
@@ -252,13 +256,24 @@ public class Deadwood {
         }
     }
 
+    private boolean isNoPartAvailable(boolean noPartAvailable, Part part) {
+        if (part.getLevel() <= players[currentPlayer].getRank()
+                && part.getPlayerOnPart() == null) {
+            noPartAvailable = false;
+            MenuItem partItem = new MenuItem(part.getName());
+            partItem.setOnAction(actionEvent -> take(partItem.getText()));
+            takeMenu.getItems().add(partItem);
+        }
+        return noPartAvailable;
+    }
+
     private void move(String roomString) {
         players[currentPlayer].getCurrentRoom().removePlayer(players[currentPlayer]);
         players[currentPlayer].setCurrentRoom(board.getRooms().get(roomString));
         players[currentPlayer].getCurrentRoom().addPlayer(players[currentPlayer]);
 
         ImageView diceView = (ImageView) playersPane.getChildren().get(currentPlayer);
-        diceView.setX(players[currentPlayer].getCurrentRoom().getX());
+        diceView.setX(currentPlayer * 20 + players[currentPlayer].getCurrentRoom().getX());
         diceView.setY(players[currentPlayer].getCurrentRoom().getY());
 
         if (players[currentPlayer].getCurrentRoom() instanceof Set) {
@@ -318,10 +333,9 @@ public class Deadwood {
     @FXML
     private void act() {
         int target = ((Set) players[currentPlayer].getCurrentRoom()).getCard().getBudget()
-                - players[currentPlayer].getTimesRehearsedThisScene() - 1;
+                - players[currentPlayer].getTimesRehearsedThisScene();
         int attempt = dice.roll(1)[0];
         dice1.setImage(new Image(dicePath + attempt + ext));
-
 
         if (attempt >= target) {
             ((Set) players[currentPlayer].getCurrentRoom()).setTakesLeft(
@@ -337,6 +351,13 @@ public class Deadwood {
             takeView.setY(((Set) players[currentPlayer].getCurrentRoom()).getTakeYValues()
                     [takeNumber]);
             takesPane.getChildren().add(takeView);
+
+            if (players[currentPlayer].isOnCard()) {
+                players[currentPlayer].setCredits(players[currentPlayer].getCredits() + 2);
+            } else {
+                players[currentPlayer].setCredits(players[currentPlayer].getCredits() + 1);
+                players[currentPlayer].setDollars(players[currentPlayer].getDollars() + 1);
+            }
         }
 
         if (((Set) players[currentPlayer].getCurrentRoom()).getTakesLeft() < 1) {
@@ -344,7 +365,9 @@ public class Deadwood {
         }
 
         players[currentPlayer].setWaitingForAction(false);
-        tick();
+        if (currentDay <= totalDays) {
+            tick();
+        }
     }
 
     private void checkForBonusMoney() {
@@ -361,7 +384,6 @@ public class Deadwood {
             // Generate array of bonus dollars
             int[] bonus = dice.roll(
                     ((Set) players[currentPlayer].getCurrentRoom()).getCard().getBudget());
-            System.out.println(bonus.length);
             switch (bonus.length) {
                 case 6:
                     dice6.setImage(new Image(dicePath + bonus[5] + ext));
@@ -398,7 +420,8 @@ public class Deadwood {
             int playerPointer = orderedStars.length - 1;
             for (int i = bonus.length - 1; i >= 0; ) {
                 if (orderedStars[playerPointer] != null) {
-                    orderedStars[playerPointer].setDollars(orderedStars[playerPointer].getDollars() + bonus[i]);
+                    orderedStars[playerPointer].setDollars(orderedStars[playerPointer].getDollars()
+                            + bonus[i]);
                     i--;
                 }
                 playerPointer--;
@@ -410,20 +433,30 @@ public class Deadwood {
             // Apply dollars to extras based on their part's level
             for (Part part : ((Set) players[currentPlayer].getCurrentRoom()).getParts()) {
                 if (part.getPlayerOnPart() != null) {
-                    part.getPlayerOnPart().setDollars(players[currentPlayer].getDollars()
-                            + players[currentPlayer].getCurrentPart().getLevel());
+                    part.getPlayerOnPart().setDollars(part.getPlayerOnPart().getDollars()
+                            + part.getLevel());
                 }
             }
         }
 
         // Detach players from parts and vice versa
         detachParts(players[currentPlayer]);
+        for (int i = 0; i < players.length; i++) {
+            if (players[currentPlayer].getCurrentRoom().getPlayers().contains(players[i])) {
+                ImageView diceView = (ImageView) playersPane.getChildren().get(i);
+                diceView.setFitWidth(20);
+                diceView.setFitHeight(20);
+                diceView.setX(i * 20 + players[i].getCurrentRoom().getX());
+                diceView.setY(players[i].getCurrentRoom().getY());
+            }
+        }
+
         tickScene();
     }
 
     private void tickScene() {
         scenesLeft--;
-        if (scenesLeft < 1) {
+        if (scenesLeft < 2) {
             tickDay();
         }
     }
@@ -471,8 +504,9 @@ public class Deadwood {
         currentDay++;
         if (currentDay > totalDays) {
             tallyScores();
+        } else {
+            resetDay();
         }
-        resetDay();
     }
 
     private void tallyScores() {
@@ -481,8 +515,33 @@ public class Deadwood {
         for (int i = 0; i < players.length; i++) {
             scores[i] = players[i].getScore();
         }
+        dollarsLabel.setOpacity(0);
+        creditsLabel.setOpacity(0);
+        moveMenu.setOpacity(0);
+        moveMenu.setDisable(true);
+        takeMenu.setOpacity(0);
+        takeMenu.setDisable(true);
+        rehearseButton.setOpacity(0);
+        rehearseButton.setDisable(true);
+        actButton.setOpacity(0);
+        actButton.setDisable(true);
+        upgradeMenu.setOpacity(0);
+        upgradeMenu.setDisable(true);
+        endButton.setOpacity(0);
+        endButton.setDisable(true);
+        dice1.setOpacity(0);
+        dice2.setOpacity(0);
+        dice3.setOpacity(0);
+        dice4.setOpacity(0);
+        dice5.setOpacity(0);
+        dice6.setOpacity(0);
+        dayLabel.setOpacity(0);
+
+        playerLabel.setText("Scores: ");
+        rehearsalsLabel.setText("");
         for (int i = 0; i < scores.length; i++) {
-            System.out.println("Player " + (i + 1) + ": " + scores[i]);
+            rehearsalsLabel.setText(rehearsalsLabel.getText() + "\nPlayer " + (i + 1) + ": "
+                    + scores[i]);
         }
     }
 }
