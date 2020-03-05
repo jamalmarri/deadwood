@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <board name="default">
-  <set name="Train Station">
+  <set name="Train Station" id="0">
     <neighbors>
       <neighbor name="Jail" />
       <neighbor name="General Store" />
       <neighbor name="office" />
     </neighbors>
-    <area x="21" y="69" h="115" w="205" />
+    <area x="45" y="195" cardX="21" cardY="69" />
     <takes>
-      <take number="3"><area x="36" y="11" h="47" w="47" /></take>
-      <take number="2"><area x="89" y="11" h="47" w="47" /></take>
-      <take number="1"><area x="141" y="11" h="47" w="47" /></take>
+      <take number="3"><area x="36" y="11" /></take>
+      <take number="2"><area x="89" y="11" /></take>
+      <take number="1"><area x="141" y="11" /></take>
     </takes>
     <parts>
       <part name="Crusty Prospector" level="1">
@@ -27,17 +27,17 @@
       </part>
     </parts>
   </set>
-  <set name="Secret Hideout">
+  <set name="Secret Hideout" id="1">
     <neighbors>
       <neighbor name="Church" />
       <neighbor name="Ranch" />
       <neighbor name="office" />
     </neighbors>
-    <area x="27" y="732" h="115" w="205" />
+    <area x="50" y="860" cardX="27" cardY="732" />
     <takes>
-      <take number="3"><area x="244" y="764" h="47" w="47" /></take>
-      <take number="2"><area x="299" y="764" h="47" w="47" /></take>
-      <take number="1"><area x="354" y="764" h="47" w="47" /></take>
+      <take number="3"><area x="244" y="764" /></take>
+      <take number="2"><area x="299" y="764" /></take>
+      <take number="1"><area x="354" y="764" /></take>
     </takes>
     <parts>
       <part name="Clumsy Pit Fighter" level="1">
@@ -54,16 +54,16 @@
       </part>
     </parts>
   </set>
-  <set name="Church">
+  <set name="Church" id="2">
     <neighbors>
       <neighbor name="Secret Hideout" />
       <neighbor name="Bank" />
       <neighbor name="Hotel" />
     </neighbors>
-    <area x="623" y="734" h="115" w="205" />
+    <area x="645" y="860" cardX="623" cardY="734" />
     <takes>
-      <take number="2"><area x="623" y="675" h="47" w="47" /></take>
-      <take number="1"><area x="682" y="675" h="47" w="47" /></take>
+      <take number="2"><area x="623" y="675" /></take>
+      <take number="1"><area x="682" y="675" /></take>
     </takes>
     <parts>
       <part name="Dead Man" level="1">
@@ -74,17 +74,17 @@
       </part>
     </parts>
   </set>
-  <set name="Hotel">
+  <set name="Hotel" id="3">
     <neighbors>
       <neighbor name="trailer" />
       <neighbor name="Bank" />
       <neighbor name="Church" />
     </neighbors>
-    <area x="969" y="740" h="115" w="205" />
+    <area x="990" y="870" cardX="969" cardY="740" />
     <takes>
-      <take number="3"><area x="1005" y="683" h="47" w="47" /></take>
-      <take number="2"><area x="1058" y="683" h="47" w="47" /></take>
-      <take number="1"><area x="1111" y="683" h="47" w="47" /></take>
+      <take number="3"><area x="1005" y="683" /></take>
+      <take number="2"><area x="1058" y="683" /></take>
+      <take number="1"><area x="1111" y="683" /></take>
     </takes>
     <parts>
       <part name="Sleeping Drunkard" level="1">
@@ -101,17 +101,17 @@
       </part>
     </parts>
   </set>
-  <set name="Main Street">
+  <set name="Main Street" id="4">
     <neighbors>
       <neighbor name="trailer" />
       <neighbor name="Jail" />
       <neighbor name="Saloon" />
     </neighbors>
-    <area x="969" y="28" h="115" w="205" />
+    <area x="995" y="155" cardX="969" cardY="28" />
     <takes>
-      <take number="3"><area x="912" y="23" h="47" w="47" /></take>
-      <take number="2"><area x="858" y="23" h="47" w="47" /></take>
-      <take number="1"><area x="804" y="23" h="47" w="47" /></take>
+      <take number="3"><area x="912" y="23" /></take>
+      <take number="2"><area x="858" y="23" /></take>
+      <take number="1"><area x="804" y="23" /></take>
     </takes>
     <parts>
       <part name="Railroad Worker" level="1">
@@ -128,15 +128,15 @@
       </part>
     </parts>
   </set>
-  <set name="Jail">
+  <set name="Jail" id="5">
     <neighbors>
       <neighbor name="Main Street" />
       <neighbor name="General Store" />
       <neighbor name="Train Station" />
     </neighbors>
-    <area x="281" y="27" h="115" w="205" />
+    <area x="295" y="155" cardX="281" cardY="27" />
     <takes>
-      <take number="1"><area x="442" y="156" h="47" w="47" /></take>
+      <take number="1"><area x="442" y="156" /></take>
     </takes>
     <parts>
       <part name="Prisoner in Cell" level="2">
@@ -147,17 +147,17 @@
       </part>
     </parts>
   </set>
-  <set name="General Store">
+  <set name="General Store" id="6">
     <neighbors>
       <neighbor name="Ranch" />
       <neighbor name="Train Station" />
       <neighbor name="Jail" />
       <neighbor name="Saloon" />
     </neighbors>
-    <area x="370" y="282" h="115" w="205" />
+    <area x="390" y="410" cardX="370" cardY="282" />
     <takes>
-      <take number="2"><area x="313" y="277" h="47" w="47" /></take>
-      <take number="1"><area x="313" y="330" h="47" w="47" /></take>
+      <take number="2"><area x="313" y="277" /></take>
+      <take number="1"><area x="313" y="330" /></take>
     </takes>
     <parts>
       <part name="Man in Overalls" level="1">
@@ -168,17 +168,17 @@
       </part>
     </parts>
   </set>
-  <set name="Ranch">
+  <set name="Ranch" id="7">
     <neighbors>
       <neighbor name="office" />
       <neighbor name="General Store" />
       <neighbor name="Secret Hideout" />
       <neighbor name="Bank" />
     </neighbors>
-    <area x="252" y="478" h="115" w="205" />
+    <area x="255" y="605" cardX="252" cardY="478" />
     <takes>
-      <take number="2"><area x="472" y="473" h="47" w="47" /></take>
-      <take number="1"><area x="525" y="473" h="47" w="47" /></take>
+      <take number="2"><area x="472" y="473" /></take>
+      <take number="1"><area x="525" y="473" /></take>
     </takes>
     <parts>
       <part name="Shot in Leg" level="1">
@@ -192,16 +192,16 @@
       </part>
     </parts>
   </set>
-  <set name="Bank">
+  <set name="Bank" id="8">
     <neighbors>
       <neighbor name="Saloon" />
       <neighbor name="Church" />
       <neighbor name="Ranch" />
       <neighbor name="Hotel" />
     </neighbors>
-    <area x="623" y="475" h="115" w="205" />
+    <area x="645" y="600" cardX="623" cardY="475" />
     <takes>
-      <take number="1"><area x="840" y="549" h="47" w="47" /></take>
+      <take number="1"><area x="840" y="549" /></take>
     </takes>
     <parts>
       <part name="Suspicious Gentleman" level="2">
@@ -212,17 +212,17 @@
       </part>
     </parts>
   </set>
-  <set name="Saloon">
+  <set name="Saloon" id="9">
     <neighbors>
       <neighbor name="Main Street" />
       <neighbor name="General Store" />
       <neighbor name="Bank" />
       <neighbor name="trailer" />
     </neighbors>
-    <area x="632" y="280" h="115" w="205" />
+    <area x="655" y="410" cardX="632" cardY="280" />
     <takes>
-      <take number="2"><area x="626" y="216" h="47" w="47" /></take>
-      <take number="1"><area x="679" y="216" h="47" w="47" /></take>
+      <take number="2"><area x="626" y="216" /></take>
+      <take number="1"><area x="679" y="216" /></take>
     </takes>
     <parts>
       <part name="Reluctant Farmer" level="1">
@@ -239,7 +239,6 @@
       <neighbor name="Saloon" />
       <neighbor name="Hotel" />
     </neighbors>
-    <area x="991" y="248" h="194" w="201" />
   </trailer>
   <office>
     <neighbors>
@@ -247,38 +246,17 @@
       <neighbor name="Ranch" />
       <neighbor name="Secret Hideout" />
     </neighbors>
-    <area x="9" y="459" h="208" w="209" />
     <upgrades>
-      <upgrade level="2" currency="dollar" amt="4" >
-        <area x="98" y="542" h="19" w="19" />
-      </upgrade>
-      <upgrade level="3" currency="dollar" amt="10">
-        <area x="98" y="564" h="19" w="19" />
-      </upgrade>
-      <upgrade level="4" currency="dollar" amt="18">
-        <area x="98" y="587" h="19" w="19" />
-      </upgrade>
-      <upgrade level="5" currency="dollar" amt="28">
-        <area x="98" y="609" h="19" w="19" />
-      </upgrade>
-      <upgrade level="6" currency="dollar" amt="40">
-        <area x="98" y="631" h="19" w="19" />
-      </upgrade>
-      <upgrade level="2" currency="credit" amt="5" >
-        <area x="147" y="542" h="19" w="19" />
-      </upgrade>
-      <upgrade level="3" currency="credit" amt="10">
-        <area x="147" y="564" h="19" w="19" />
-      </upgrade>
-      <upgrade level="4" currency="credit" amt="15">
-        <area x="147" y="587" h="19" w="19" />
-      </upgrade>
-      <upgrade level="5" currency="credit" amt="20">
-        <area x="147" y="609" h="19" w="19" />
-      </upgrade>
-      <upgrade level="6" currency="credit" amt="25">
-        <area x="147" y="631" h="19" w="19" />
-      </upgrade>
+      <upgrade level="2" currency="dollar" amt="4" />
+      <upgrade level="3" currency="dollar" amt="10"/>
+      <upgrade level="4" currency="dollar" amt="18"/>
+      <upgrade level="5" currency="dollar" amt="28"/>
+      <upgrade level="6" currency="dollar" amt="40"/>
+      <upgrade level="2" currency="credit" amt="5" />
+      <upgrade level="3" currency="credit" amt="10"/>
+      <upgrade level="4" currency="credit" amt="15"/>
+      <upgrade level="5" currency="credit" amt="20"/>
+      <upgrade level="6" currency="credit" amt="25"/>
     </upgrades>
   </office>
 </board>
