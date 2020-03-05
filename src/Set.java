@@ -14,10 +14,15 @@ import java.util.HashSet;
  * @see Card
  */
 public class Set extends Room {
+    private final int id;
     private final int defaultTakes;
+    private final int cardX;
+    private final int cardY;
+    private final int[] takeXValues;
+    private final int[] takeYValues;
     private final HashSet<Part> parts;
-    private Card card;
     private int takesLeft;
+    private Card card;
 
     /**
      * Class constructor.
@@ -28,31 +33,70 @@ public class Set extends Room {
      * @param parts        the HashSet of Parts that this Set contains.
      * @see HashSet
      */
-    public Set(String name, HashSet<Room> neighbors, int defaultTakes, HashSet<Part> parts) {
-        super(name, neighbors);
+    public Set(String name, HashSet<Room> neighbors, int id, int defaultTakes, int x, int y,
+               int cardX, int cardY, int[] takeXValues, int[] takeYValues, HashSet<Part> parts) {
+        super(name, x, y, neighbors);
+        this.id = id;
         this.defaultTakes = defaultTakes;
+        this.cardX = cardX;
+        this.cardY = cardY;
+        this.takeXValues = takeXValues;
+        this.takeYValues = takeYValues;
         this.parts = parts;
+        this.takesLeft = defaultTakes;
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**
-     * Gets the Card on this Set, to check the star
-     * roles that a Player can possibly attain.
+     * Gets the default amount of takes for this Set, which
+     * is very useful for resetting the number of takes left
+     * at the end of a movie.
      *
-     * @return the current Card for this Set.
+     * @return the default number of takes for this Set.
      */
-    public Card getCard() {
-        return card;
+    public int getDefaultTakes() {
+        return defaultTakes;
+    }
+
+    public int getCardX() {
+        return cardX;
+    }
+
+    public int getCardY() {
+        return cardY;
+    }
+
+    public int[] getTakeXValues() {
+        return takeXValues;
+    }
+
+    public int[] getTakeYValues() {
+        return takeYValues;
     }
 
     /**
-     * Sets the Card on this Set, to determine the
-     * potential star roles that a Player can take,
-     * as well as the name and budget of the movie.
+     * Gets the HashSet of Parts associated with this Set,
+     * which is used to find all of the Players associated
+     * with them.
      *
-     * @param card the new Card for this Set.
+     * @return the HashSet of parts associated with this Set.
+     * @see HashSet
      */
-    public void setCard(Card card) {
-        this.card = card;
+    public HashSet<Part> getParts() {
+        return parts;
+    }
+
+    /**
+     * Adds a new Part to this Set's 'parts' HashSet, for when
+     * the game adds every Set's Parts.
+     *
+     * @param part the new part to be added to the 'parts' HashSet.
+     */
+    public void addPart(Part part) {
+        parts.add(part);
     }
 
     /**
@@ -76,35 +120,23 @@ public class Set extends Room {
     }
 
     /**
-     * Gets the default amount of takes for this Set, which
-     * is very useful for resetting the number of takes left
-     * at the end of a movie.
+     * Gets the Card on this Set, to check the star
+     * roles that a Player can possibly attain.
      *
-     * @return the default number of takes for this Set.
+     * @return the current Card for this Set.
      */
-    public int getDefaultTakes() {
-        return defaultTakes;
+    public Card getCard() {
+        return card;
     }
 
     /**
-     * Gets the HashSet of Parts associated with this Set,
-     * which is used to find all of the Players associated
-     * with them.
+     * Sets the Card on this Set, to determine the
+     * potential star roles that a Player can take,
+     * as well as the name and budget of the movie.
      *
-     * @return the HashSet of parts associated with this Set.
-     * @see HashSet
+     * @param card the new Card for this Set.
      */
-    public HashSet<Part> getParts() {
-        return parts;
-    }
-
-    /**
-     * Adds a new Part to this Set's 'parts' HashSet, for when
-     * the game adds every Set's Parts.
-     *
-     * @param part the new part to be added to the 'parts' HashSet.
-     */
-    public void addPart(Part part) {
-        parts.add(part);
+    public void setCard(Card card) {
+        this.card = card;
     }
 }
