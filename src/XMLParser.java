@@ -1,20 +1,17 @@
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import static java.lang.Integer.parseInt;
 
 /**
  * A utility class that provides XML parsing of the
@@ -84,14 +81,15 @@ public class XMLParser {
 
             // Declare card variables
             String cardName;
-            int sceneNumber;
-            String description;
             int budget;
+            String pathToCard;
 
             // Declare card part variables
             String partName;
-            String line;
             int level;
+            int x;
+            int y;
+            int diceSize;
 
             // Initialize deck as new ArrayList
             deck = new ArrayList<>();
@@ -106,12 +104,12 @@ public class XMLParser {
 
                     // Initialize all card information variables using card attributes and child nodes
                     cardName = cardElement.getAttribute("name");
-                    sceneNumber = parseInt(cardElement.getElementsByTagName("scene").item(0).getAttributes().getNamedItem("number").getTextContent());
-                    description = cardElement.getElementsByTagName("scene").item(0).getTextContent().trim();
-                    budget = parseInt(cardElement.getAttribute("budget"));
+                    budget = Integer.parseInt(cardElement.getAttribute("budget"));
+                    pathToCard = "img/cards/" + cardElement.getAttribute("img");
+
 
                     // Declare and initialize new card using card information variables
-                    Card card = new Card(cardName, sceneNumber, description, budget, new HashSet<>());
+                    Card card = new Card(cardName, budget, pathToCard, new HashSet<>());
                     deck.add(card);
 
                     // Declare and initialize node list of parts
@@ -125,12 +123,16 @@ public class XMLParser {
                             Element partElement = (Element) parts.item(j);
 
                             // Initialize all part information variables using part attributes and child nodes
-                            partName = parts.item(j).getAttributes().getNamedItem("name").getTextContent();
-                            line = partElement.getElementsByTagName("line").item(0).getTextContent();
-                            level = parseInt(parts.item(j).getAttributes().getNamedItem("level").getTextContent());
+                            partName = partElement.getAttribute("name");
+                            level = Integer.parseInt(partElement.getAttribute("level"));
+
+                            Element partArea = (Element) partElement.getElementsByTagName("area").item(0);
+                            x = Integer.parseInt(partArea.getAttribute("x"));
+                            y = Integer.parseInt(partArea.getAttribute("y"));
+                            diceSize = Integer.parseInt(partArea.getAttribute("h"));
 
                             // Add part to card's 'parts' HashSet
-                            card.addPart(new Part(partName, line, level));
+                            card.addPart(new Part(partName, level, x, y, diceSize));
                         }
                     }
                 }
@@ -172,12 +174,21 @@ public class XMLParser {
 
             // Declare set variables
             String setName;
+            int setID;
             int defaultTakes;
+            int x;
+            int y;
+            int cardX;
+            int cardY;
+            int[] takeXValues;
+            int[] takeYValues;
 
             // Declare part variables
             String partName;
-            String line;
             int level;
+            int partX;
+            int partY;
+            int diceSize;
 
             // Initialize sets as new HashMap
             sets = new HashMap<>();
@@ -191,12 +202,31 @@ public class XMLParser {
                     setElement = (Element) setNode;
 
                     // Initialize set information variables using set attributes and child nodes
-                    setName = setElement.getAttributes().getNamedItem("name").getTextContent();
+                    setName = setElement.getAttribute("name");
+                    setID = Integer.parseInt(setElement.getAttribute("id"));
+
+                    Element areaElement = (Element) setElement.getElementsByTagName("area").item(0);
+                    x = Integer.parseInt(areaElement.getAttribute("x"));
+                    y = Integer.parseInt(areaElement.getAttribute("y"));
+                    cardX = Integer.parseInt(areaElement.getAttribute("cardX"));
+                    cardY = Integer.parseInt(areaElement.getAttribute("cardY"));
+
                     takesElement = (Element) setElement.getElementsByTagName("takes").item(0);
                     defaultTakes = takesElement.getElementsByTagName("take").getLength();
+                    takeXValues = new int[defaultTakes];
+                    takeYValues = new int[defaultTakes];
+
+                    for (int j = 0; j < defaultTakes; j++) {
+                        Element takeElement = (Element) takesElement.getElementsByTagName("take").item(j);
+                        int takeNumber = Integer.parseInt(takeElement.getAttribute("number")) - 1;
+                        Element takeArea = (Element) takeElement.getElementsByTagName("area").item(0);
+                        takeXValues[takeNumber] = Integer.parseInt(takeArea.getAttribute("x"));
+                        takeYValues[takeNumber] = Integer.parseInt(takeArea.getAttribute("y"));
+                    }
 
                     // Declare and initialize new set using set information variables
-                    Set set = new Set(setName, new HashSet<>(), defaultTakes, new HashSet<>());
+                    Set set = new Set(setName, new HashSet<>(), setID, defaultTakes, x, y, cardX,
+                            cardY, takeXValues, takeYValues, new HashSet<>());
                     sets.put(setName, set);
 
                     // Declare and initialize node list of parts
@@ -210,12 +240,16 @@ public class XMLParser {
                             Element partElement = (Element) parts.item(j);
 
                             // Initialize all part information variables using part attributes and child nodes
-                            partName = parts.item(j).getAttributes().getNamedItem("name").getTextContent();
-                            line = partElement.getElementsByTagName("line").item(0).getTextContent();
-                            level = parseInt(parts.item(j).getAttributes().getNamedItem("level").getTextContent());
+                            partName = partElement.getAttribute("name");
+                            level = Integer.parseInt(partElement.getAttribute("level"));
+
+                            Element partArea = (Element) partElement.getElementsByTagName("area").item(0);
+                            partX = Integer.parseInt(partArea.getAttribute("x"));
+                            partY = Integer.parseInt(partArea.getAttribute("y"));
+                            diceSize = Integer.parseInt(partArea.getAttribute("h"));
 
                             // Add part to set's 'parts' HashSet
-                            set.addPart(new Part(partName, line, level));
+                            set.addPart(new Part(partName, level, partX, partY, diceSize));
                         }
                     }
                 }
@@ -257,13 +291,7 @@ public class XMLParser {
                 // Locate, declare, and initialize the neighbors node list
                 Node trailerNode = board.getElementsByTagName("trailer").item(0);
                 Element trailerElement = (Element) trailerNode;
-                Element neighborsElement = (Element) trailerElement.getElementsByTagName("neighbors").item(0);
-                NodeList trailerNeighbors = neighborsElement.getElementsByTagName("neighbor");
-
-                // For every child node of the neighbors node list, add it to the neighbors HashSet
-                for (int i = 0; i < trailerNeighbors.getLength(); i++) {
-                    neighbors.add(trailerNeighbors.item(i).getAttributes().item(0).getTextContent());
-                }
+                addNeighbors(neighbors, trailerElement);
 
                 return neighbors;
                 // Special case for 'Casting Office' room
@@ -272,14 +300,7 @@ public class XMLParser {
                 // Locate, declare, and initialize the neighbors node list
                 Node officeNode = board.getElementsByTagName("office").item(0);
                 Element officeElement = (Element) officeNode;
-                Element neighborsElement = (Element) officeElement.getElementsByTagName("neighbors").item(0);
-                NodeList officeNeighbors = neighborsElement.getElementsByTagName("neighbor");
-
-                // For every child node of the neighbors node list, add it to the neighbors HashSet
-                for (int i = 0; i < officeNeighbors.getLength(); i++) {
-                    neighbors.add(officeNeighbors.item(i).getAttributes().item(0).getTextContent());
-                }
-
+                addNeighbors(neighbors, officeElement);
                 return neighbors;
                 // Default case for all sets
             } else {
@@ -293,13 +314,7 @@ public class XMLParser {
                 // Locate, declare, and initialize the neighbors node list
                 Node setNode = board.getElementsByTagName("set").item(i);
                 Element setElement = (Element) setNode;
-                Element neighborsElement = (Element) setElement.getElementsByTagName("neighbors").item(0);
-                NodeList setNeighbors = neighborsElement.getElementsByTagName("neighbor");
-
-                // For every child node of the neighbors node list, add it to the neighbors HashSet
-                for (int j = 0; j < setNeighbors.getLength(); j++) {
-                    neighbors.add(setNeighbors.item(j).getAttributes().item(0).getTextContent());
-                }
+                addNeighbors(neighbors, setElement);
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             // This should never happen, so long as the XML documents remain unaltered
@@ -307,6 +322,16 @@ public class XMLParser {
         }
 
         return neighbors;
+    }
+
+    private void addNeighbors(HashSet<String> neighbors, Element roomElement) {
+        Element neighborsElement = (Element) roomElement.getElementsByTagName("neighbors").item(0);
+        NodeList roomNeighbors = neighborsElement.getElementsByTagName("neighbor");
+
+        // For every child node of the neighbors node list, add it to the neighbors HashSet
+        for (int i = 0; i < roomNeighbors.getLength(); i++) {
+            neighbors.add(roomNeighbors.item(i).getAttributes().item(0).getTextContent());
+        }
     }
 
     /**
@@ -341,8 +366,8 @@ public class XMLParser {
             int i;
             for (int j = 0; j < upgradesList.getLength(); j++) {
                 if (upgradesList.item(j).getAttributes().getNamedItem("currency").getTextContent().equals(currency)) {
-                    i = parseInt(upgradesList.item(j).getAttributes().getNamedItem("level").getTextContent());
-                    pricing[i - 2] = parseInt(upgradesList.item(j).getAttributes().getNamedItem("amt").getTextContent());
+                    i = Integer.parseInt(upgradesList.item(j).getAttributes().getNamedItem("level").getTextContent());
+                    pricing[i - 2] = Integer.parseInt(upgradesList.item(j).getAttributes().getNamedItem("amt").getTextContent());
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
