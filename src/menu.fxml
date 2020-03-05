@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Scene?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.Scene?>
 <?import javafx.scene.text.Font?>
-
-<Scene xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Menu">
+<Scene xmlns:fx="http://javafx.com/fxml/1" fx:controller="Menu">
     <HBox>
         <Label text="Enter number of players: ">
             <font>
-                <Font name="SansSerif Regular" size="21.0" />
+                <Font name="SansSerif Regular" size="21.0"/>
             </font>
         </Label>
-        <MenuButton fx:id="playerCountButton" mnemonicParsing="false" text="#" />
+        <MenuButton fx:id="playerCountButton" mnemonicParsing="false" text="#"/>
     </HBox>
 </Scene>
