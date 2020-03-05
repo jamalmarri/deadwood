@@ -10,21 +10,24 @@
  */
 public class Part {
     private final String name;
-    private final String line;
     private final int level;
+    private final int x;
+    private final int y;
+    private final int diceSize;
     private Player playerOnPart;
 
     /**
      * Class constructor.
      *
      * @param name  the name of this Part, to be displayed to the user.
-     * @param line  the line the Player will 'speak', to be displayed to the user.
      * @param level the minimum level or 'rank' the Player must be to attain this Part.
      */
-    public Part(String name, String line, int level) {
+    public Part(String name, int level, int x, int y, int diceSize) {
         this.name = name;
-        this.line = line;
         this.level = level;
+        this.x = x;
+        this.y = y;
+        this.diceSize = diceSize;
     }
 
     /**
@@ -37,21 +40,24 @@ public class Part {
     }
 
     /**
-     * Gets the line of this Part for displaying to the user.
-     *
-     * @return the line for this Part.
-     */
-    public String getLine() {
-        return line;
-    }
-
-    /**
      * Gets the level of this Part for verifying the Player meets the minimum rank requirement.
      *
      * @return the level requirement for this Part.
      */
     public int getLevel() {
         return level;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getDiceSize() {
+        return diceSize;
     }
 
     /**
