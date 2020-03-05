@@ -69,10 +69,6 @@ public class Deadwood {
     private Label dayLabel;
 
     public static void main(String[] args) {
-        launch();
-    }
-
-    private static void launch() {
         new JFXPanel();
         Platform.runLater(() -> screen.start(new Stage()));
     }
