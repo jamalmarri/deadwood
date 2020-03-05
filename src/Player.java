@@ -8,10 +8,12 @@
  * @see Room
  */
 public class Player {
+    private final String pathToDice;
     private Room currentRoom;
     private int dollars;
     private int credits;
     private int rank;
+    private boolean hasMoved;
     private boolean waitingForAction;
     private boolean isActing;
     private boolean isOnCard;
@@ -22,10 +24,8 @@ public class Player {
      * Default constructor that initializes a Player
      * in a situation where no special rules apply.
      */
-    public Player() {
-        this.dollars = 0;
-        this.credits = 0;
-        this.rank = 1;
+    public Player(int playerNumber) {
+        this(playerNumber, 0, 1);
     }
 
     /**
@@ -35,10 +35,63 @@ public class Player {
      * @param credits the number of credits this Player will start with.
      * @param rank    the rank this Player will start at.
      */
-    public Player(int credits, int rank) {
-        this.dollars = 0;
+    public Player(int playerNumber, int credits, int rank) {
+        switch (playerNumber) {
+            case 0:
+                pathToDice = "img/dice/red/";
+                break;
+            case 1:
+                pathToDice = "img/dice/blue/";
+                break;
+            case 2:
+                pathToDice = "img/dice/green/";
+                break;
+            case 3:
+                pathToDice = "img/dice/yellow/";
+                break;
+            case 4:
+                pathToDice = "img/dice/violet/";
+                break;
+            case 5:
+                pathToDice = "img/dice/pink/";
+                break;
+            case 6:
+                pathToDice = "img/dice/orange/";
+                break;
+            case 7:
+                pathToDice = "img/dice/cyan/";
+                break;
+            default:
+                pathToDice = "img/dice/white/";
+                break;
+        }
+
         this.credits = credits;
         this.rank = rank;
+    }
+
+    public String getPathToDice() {
+        return pathToDice;
+    }
+
+    /**
+     * Gets this Player's current Room, used to determine what actions
+     * this Player can take at the current time.
+     *
+     * @return the Room that this Player is currently in.
+     */
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+
+    /**
+     * Sets the Room that this Player is now in,
+     * used when this Player moves between Rooms.
+     *
+     * @param currentRoom the Room that this Player is now in.
+     */
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
     }
 
     /**
@@ -101,44 +154,32 @@ public class Player {
         this.rank = rank;
     }
 
-    /**
-     * Gets the number of times this Player has rehearsed during the current scene,
-     * used for applying the rehearsal bonus while attempting to act.
-     *
-     * @return the number of times this Player has rehearsed during the current scene.
-     */
-    public int getTimesRehearsedThisScene() {
-        return timesRehearsedThisScene;
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public void setMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
     }
 
     /**
-     * Sets the new number of times this Player has rehearsed during the current scene,
-     * used when this Player has just rehearsed.
+     * Gets whether or not this Player has already performed an action during this turn,
+     * used to ensure this Player doesn't perform more than one action.
      *
-     * @param timesRehearsedThisScene the new number of time this Player has rehearsed during the current scene.
+     * @return the boolean that represents whether this Player is waiting for an action to be performed.
      */
-    public void setTimesRehearsedThisScene(int timesRehearsedThisScene) {
-        this.timesRehearsedThisScene = timesRehearsedThisScene;
+    public boolean isNotWaitingForAction() {
+        return !waitingForAction;
     }
 
     /**
-     * Gets this Player's current Room, used to determine what actions
-     * this Player can take at the current time.
+     * Sets whether or not this Player has already performed an action during this turn,
+     * used after this Player has performed an action in the game.
      *
-     * @return the Room that this Player is currently in.
+     * @param waitingForAction the boolean that represents whether this Player is waiting for an action to be performed.
      */
-    public Room getCurrentRoom() {
-        return currentRoom;
-    }
-
-    /**
-     * Sets the Room that this Player is now in,
-     * used when this Player moves between Rooms.
-     *
-     * @param currentRoom the Room that this Player is now in.
-     */
-    public void setCurrentRoom(Room currentRoom) {
-        this.currentRoom = currentRoom;
+    public void setWaitingForAction(boolean waitingForAction) {
+        this.waitingForAction = waitingForAction;
     }
 
     /**
@@ -205,23 +246,23 @@ public class Player {
     }
 
     /**
-     * Gets whether or not this Player has already performed an action during this turn,
-     * used to ensure this Player doesn't perform more than one action.
+     * Gets the number of times this Player has rehearsed during the current scene,
+     * used for applying the rehearsal bonus while attempting to act.
      *
-     * @return the boolean that represents whether this Player is waiting for an action to be performed.
+     * @return the number of times this Player has rehearsed during the current scene.
      */
-    public boolean isWaitingForAction() {
-        return waitingForAction;
+    public int getTimesRehearsedThisScene() {
+        return timesRehearsedThisScene;
     }
 
     /**
-     * Sets whether or not this Player has already performed an action during this turn,
-     * used after this Player has performed an action in the game.
+     * Sets the new number of times this Player has rehearsed during the current scene,
+     * used when this Player has just rehearsed.
      *
-     * @param waitingForAction the boolean that represents whether this Player is waiting for an action to be performed.
+     * @param timesRehearsedThisScene the new number of time this Player has rehearsed during the current scene.
      */
-    public void setWaitingForAction(boolean waitingForAction) {
-        this.waitingForAction = waitingForAction;
+    public void setTimesRehearsedThisScene(int timesRehearsedThisScene) {
+        this.timesRehearsedThisScene = timesRehearsedThisScene;
     }
 
     /**
