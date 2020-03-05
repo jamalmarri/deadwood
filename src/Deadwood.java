@@ -197,7 +197,8 @@ public class Deadwood {
         actButton.setDisable(!players[currentPlayer].isActing()
                 | players[currentPlayer].isNotWaitingForAction());
         upgradeMenu.setDisable(players[currentPlayer].getCurrentRoom() != board.getCastingOffice()
-                | players[currentPlayer].isNotWaitingForAction());
+                | players[currentPlayer].isNotWaitingForAction()
+                | players[currentPlayer].hasUpgraded());
 
         if (!moveMenu.isDisabled()) {
             for (Room neighbor : players[currentPlayer].getCurrentRoom().getNeighbors()) {
@@ -429,7 +430,7 @@ public class Deadwood {
 
     private void upgrade(String upgradeString) {
         String[] upgradeArray = upgradeString.split(" ");
-        int newRank = Integer.parseInt(upgradeArray[1].substring(1));
+        int newRank = Integer.parseInt(upgradeArray[1].substring(0, 1));
         if (upgradeArray[3].equals("dollars")) {
             players[currentPlayer].setDollars(players[currentPlayer].getDollars()
                     - board.getUpgradeDollarPrices()[newRank - 2]);
@@ -438,7 +439,7 @@ public class Deadwood {
                     - board.getUpgradeCreditPrices()[newRank - 2]);
         }
         players[currentPlayer].setRank(newRank);
-        players[currentPlayer].setWaitingForAction(false);
+        players[currentPlayer].setUpgraded(true);
         tick();
     }
 
@@ -446,6 +447,7 @@ public class Deadwood {
     private void end() {
         if (currentPlayer > -1) {
             players[currentPlayer].setMoved(false);
+            players[currentPlayer].setUpgraded(false);
             players[currentPlayer].setWaitingForAction(true);
         }
 
