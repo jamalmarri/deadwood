@@ -32,5 +32,6 @@ public class Screen extends Application {
             e.printStackTrace();
         }
         primaryStage.setScene(gameScene);
+        primaryStage.centerOnScreen();
     }
 }
