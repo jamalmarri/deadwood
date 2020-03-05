@@ -84,7 +84,7 @@
                             <Font name="SansSerif Regular" size="17.0"/>
                         </font>
                     </MenuButton>
-                    <Button mnemonicParsing="false" onAction="#end" prefWidth="143.0" text="End Turn">
+                    <Button fx:id="endButton" mnemonicParsing="false" onAction="#end" prefWidth="143.0" text="End Turn">
                         <VBox.margin>
                             <Insets/>
                         </VBox.margin>
