@@ -14,6 +14,7 @@ public class Player {
     private int credits;
     private int rank;
     private boolean hasMoved;
+    private boolean hasUpgraded;
     private boolean waitingForAction;
     private boolean isActing;
     private boolean isOnCard;
@@ -160,6 +161,14 @@ public class Player {
 
     public void setMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
+    }
+
+    public boolean hasUpgraded() {
+        return hasUpgraded;
+    }
+
+    public void setUpgraded(boolean hasUpgraded) {
+        this.hasUpgraded = hasUpgraded;
     }
 
     /**
