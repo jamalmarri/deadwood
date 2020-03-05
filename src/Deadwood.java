@@ -105,7 +105,7 @@ public class Deadwood {
                     players[i] = new Player(i);
                     break;
             }
-            Image diceImage = new Image(players[i].getPathToDice() + 1 + ext);
+            Image diceImage = new Image(players[i].getPathToDice() + players[i].getRank() + ext);
             ImageView diceView = new ImageView(diceImage);
             diceView.setFitWidth(20);
             diceView.setFitHeight(20);
@@ -171,6 +171,9 @@ public class Deadwood {
         rehearsalsLabel.setText("Rehearsals: " +
                 players[currentPlayer].getTimesRehearsedThisScene());
         dayLabel.setText("Day " + currentDay);
+        ImageView diceView = (ImageView) playersPane.getChildren().get(currentPlayer);
+        diceView.setImage(new Image(players[currentPlayer].getPathToDice()
+                + players[currentPlayer].getRank() + ext));
 
         moveMenu.getItems().clear();
         takeMenu.getItems().clear();
