@@ -20,9 +20,9 @@ public class Card {
     /**
      * Class constructor.
      *
-     * @param name        the name of this Card to be displayed to the user.
-     * @param budget      the budget of this Card to be used for acting and bonus payouts.
-     * @param parts       the HashSet of Parts that this Card contains.
+     * @param name   the name of this Card to be displayed to the user.
+     * @param budget the budget of this Card to be used for acting and bonus payouts.
+     * @param parts  the HashSet of Parts that this Card contains.
      * @see HashSet
      */
     public Card(String name, int budget, String pathToCard, HashSet<Part> parts) {
