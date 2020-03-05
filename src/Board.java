@@ -12,8 +12,8 @@ import java.util.HashSet;
 public class Board {
     private static boolean objectExists = false;
     private static Board board;
-    private final Room trailers = new Room("Trailers", new HashSet<>());
-    private final Room castingOffice = new Room("Casting Office", new HashSet<>());
+    private final Room trailers = new Room("Trailers", 1020, 275, new HashSet<>());
+    private final Room castingOffice = new Room("Casting Office", 20, 475, new HashSet<>());
     private final XMLParser parser = XMLParser.getInstance();
     private int[] upgradeCreditPrices;
     private int[] upgradeDollarPrices;
