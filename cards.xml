@@ -129,7 +129,7 @@
     </part>
   </card>
   <card name="Taffy Commercial" img="14.png" budget="2">
-    <part name="Curious girl" level="3">
+    <part name="Curious Girl" level="3">
       <area x="53" y="47" h="40" w="40" />
     </part>
     <part name="Ghost of Plato" level="4">
