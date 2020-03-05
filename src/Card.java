@@ -13,26 +13,22 @@ import java.util.HashSet;
  */
 public class Card {
     private final String name;
-    private final int sceneNumber;
-    private final String description;
     private final int budget;
+    private final String pathToCard;
     private final HashSet<Part> parts;
 
     /**
      * Class constructor.
      *
      * @param name        the name of this Card to be displayed to the user.
-     * @param sceneNumber the scene number of this Card to be displayed to the user.
-     * @param description the description of this Card to be displayed to the user.
      * @param budget      the budget of this Card to be used for acting and bonus payouts.
      * @param parts       the HashSet of Parts that this Card contains.
      * @see HashSet
      */
-    public Card(String name, int sceneNumber, String description, int budget, HashSet<Part> parts) {
+    public Card(String name, int budget, String pathToCard, HashSet<Part> parts) {
         this.name = name;
-        this.sceneNumber = sceneNumber;
-        this.description = description;
         this.budget = budget;
+        this.pathToCard = pathToCard;
         this.parts = parts;
     }
 
@@ -46,24 +42,6 @@ public class Card {
     }
 
     /**
-     * Gets the scene number of this Card for displaying to the user.
-     *
-     * @return the scene number of this Card to be displayed to the user.
-     */
-    public int getSceneNumber() {
-        return sceneNumber;
-    }
-
-    /**
-     * Gets the description of this Card for displaying to the user.
-     *
-     * @return the description of this Card to be displayed to the user.
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
      * Gets the budget of this Card for verifying if the Player has
      * successfully acted on their part, and to determine the amount
      * of dice to roll in the event of a bonus payout.
@@ -72,6 +50,10 @@ public class Card {
      */
     public int getBudget() {
         return budget;
+    }
+
+    public String getPathToCard() {
+        return pathToCard;
     }
 
     /**
