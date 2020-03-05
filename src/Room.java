@@ -11,6 +11,8 @@ import java.util.HashSet;
  */
 public class Room {
     private final String name;
+    private final int x;
+    private final int y;
     private final HashSet<Room> neighbors;
     private final HashSet<Player> players;
 
@@ -21,8 +23,10 @@ public class Room {
      * @param neighbors the neighboring Rooms of this Room.
      * @see HashSet
      */
-    public Room(String name, HashSet<Room> neighbors) {
+    public Room(String name, int x, int y, HashSet<Room> neighbors) {
         this.name = name;
+        this.x = x;
+        this.y = y;
         this.neighbors = neighbors;
         players = new HashSet<>();
     }
@@ -34,6 +38,14 @@ public class Room {
      */
     public String getName() {
         return name;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     /**
@@ -48,6 +60,16 @@ public class Room {
     }
 
     /**
+     * Adds the inputted Room into the 'neighbors' HashSet, for when
+     * the game connects all Rooms together.
+     *
+     * @param neighbor the new Room to add to the 'neighbors' HashSet.
+     */
+    public void addNeighbor(Room neighbor) {
+        neighbors.add(neighbor);
+    }
+
+    /**
      * Gets the HashSet of this Room's players, for checking
      * what Players are currently in this Room.
      *
@@ -56,16 +78,6 @@ public class Room {
      */
     public HashSet<Player> getPlayers() {
         return players;
-    }
-
-    /**
-     * Adds the inputted Room into the 'neighbors' HashSet, for when
-     * the game connects all Rooms together.
-     *
-     * @param neighbor the new Room to add to the 'neighbors' HashSet.
-     */
-    public void addNeighbor(Room neighbor) {
-        neighbors.add(neighbor);
     }
 
     /**
