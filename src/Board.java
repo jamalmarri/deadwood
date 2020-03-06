@@ -9,6 +9,7 @@ import java.util.HashSet;
  *
  * @author Jamal Marri
  * @author Megan Theimer
+ * @see Card
  * @see Room
  */
 public class Board {
@@ -120,7 +121,7 @@ public class Board {
     }
 
     /**
-     * Gets the array of credit rank upgrade pricing, used when a Player upgrades their rank.
+     * Gets the array of credit rank upgrade pricing.
      *
      * @return the integer array of credit pricing for this Board
      */
@@ -129,7 +130,7 @@ public class Board {
     }
 
     /**
-     * Gets the array of dollar rank upgrade pricing, used when a Player upgrades their rank.
+     * Gets the array of dollar rank upgrade pricing.
      *
      * @return the integer array of dollar pricing for this Board
      */
@@ -138,28 +139,29 @@ public class Board {
     }
 
     /**
-     * Gets the ArrayList of Cards, used to determine the movie on a particular Set.
+     * Gets the ArrayList of Cards.
      *
      * @return the ArrayList of Cards for this Board
      * @see ArrayList
+     * @see Card
      */
     public ArrayList<Card> getDeck() {
         return deck;
     }
 
     /**
-     * Gets the HashMap of Rooms, used to navigate around this Board.
+     * Gets the HashMap of Rooms.
      *
      * @return the HashMap of Rooms for this Board
      * @see HashMap
+     * @see Room
      */
     public HashMap<String, Room> getRooms() {
         return rooms;
     }
 
     /**
-     * Gets the direct reference to the 'Trailers' Room for when Player positions are reset at the
-     * end of each day in the game.
+     * Gets the direct reference to the 'Trailers' Room.
      *
      * @return the 'Trailers' Room on this Board
      * @see Room
@@ -169,8 +171,7 @@ public class Board {
     }
 
     /**
-     * Gets the direct reference to the 'Casting Office' Room to check if a Player can upgrade their
-     * rank.
+     * Gets the direct reference to the 'Casting Office' Room.
      *
      * @return the 'Casting Office' Room on this Board
      * @see Room
