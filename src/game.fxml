@@ -12,7 +12,8 @@
 <?import javafx.scene.Scene?>
 <?import javafx.scene.text.Font?>
 <Scene xmlns:fx="http://javafx.com/fxml/1" fx:controller="Deadwood">
-    <Pane>
+    <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0"
+          prefWidth="1353.0">
         <HBox>
             <Pane>
                 <ImageView pickOnBounds="true" preserveRatio="true">
@@ -84,7 +85,8 @@
                             <Font name="SansSerif Regular" size="17.0"/>
                         </font>
                     </MenuButton>
-                    <Button fx:id="endButton" mnemonicParsing="false" onAction="#end" prefWidth="143.0" text="End Turn">
+                    <Button fx:id="endButton" mnemonicParsing="false" onAction="#endTurn" prefWidth="143.0"
+                            text="End Turn">
                         <VBox.margin>
                             <Insets/>
                         </VBox.margin>
