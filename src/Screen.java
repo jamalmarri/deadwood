@@ -28,6 +28,7 @@ public class Screen extends Application {
         // Set the stage's scene to the menu scene
         primaryStage.setScene(menuScene);
         primaryStage.centerOnScreen();
+        primaryStage.sizeToScene();
         primaryStage.show();
     }
 
@@ -45,6 +46,7 @@ public class Screen extends Application {
         // Set the stage's scene to the game scene
         primaryStage.setScene(gameScene);
         primaryStage.centerOnScreen();
+        primaryStage.sizeToScene();
         primaryStage.show();
     }
 }
