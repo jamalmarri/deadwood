@@ -15,8 +15,9 @@ our program. Therefore, we only need one instance of this class.
 
 We also use the MVC design pattern in our implementation, since it
 is worked into the structure of FXML (what we used to create our
-GUI). The FXML files represent the View, our Screen class
-represents the Controller, and the rest of our classes represent
-the Model. Using MVC ensures that state is separate from the user
-interface. Changes in data can affect the display, while changes
-in the display don’t have to affect the data.
+GUI). The FXML files and Screen class represent the View, our
+Deadwood and Menu classes represent the Controller, and the rest
+of our classes represent the Model. Using MVC ensures that state
+is separate from the user interface. Changes in data can affect
+the display, while changes in the display don’t have to affect the
+data.
