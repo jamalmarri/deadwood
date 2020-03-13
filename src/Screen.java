@@ -8,8 +8,32 @@ import java.io.IOException;
 /** JavaFX Application which displays the current state of the game. */
 public class Screen extends Application {
 
+    /** Whether or not the Screen object has been initialized. */
+    private static boolean objectExists = false;
+
+    /** The one Screen object for this Singleton class. */
+    private static Screen screen;
+
     /** The primary Stage for this Screen. */
     private Stage primaryStage;
+
+    /** Class constructor. */
+    private Screen() {}
+
+    /**
+     * Ensures exactly one Screen exists and returns it.
+     *
+     * @return the Screen object
+     */
+    public static Screen getInstance() {
+        // Check if a Screen object already exists
+        if (!objectExists) {
+            // Create a new Screen object if one doesn't already exist
+            screen = new Screen();
+            objectExists = true;
+        }
+        return screen;
+    }
 
     @Override
     public void start(Stage primaryStage) {

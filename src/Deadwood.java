@@ -28,7 +28,7 @@ public class Deadwood {
     private static final int takeSize = 47;
 
     /** The Screen used to display the status of this game. */
-    private static Screen screen = new Screen();
+    private static Screen screen = Screen.getInstance();
 
     /** The Board that contains all of the Rooms and Cards in this game. */
     private static Board board = Board.getInstance();
