@@ -1,23 +1,17 @@
-The only design pattern we explicitly use in our implementation of
-Deadwood is Singleton. Our Board, XMLParser, and Dice classes are
-Singletons. While none of these classes need to be Singletons,
-they ensure that our code is robust. We made Board a Singleton
-because only one gameboard should exist during a game of Deadwood,
-with every participant interacting with that single board. A
-Singleton class makes sure that another board is not accidently
-created at some point during execution. Additionally, we made
-XMLParser a Singleton because there is no need for more than one
-object that parses our XML files. This ensures that the data from
-the XML files is all contained in one spot, which also saves
-space. Similarly, we made Dice a Singleton because nothing about
-how rolling a dice works should change throughout the execution of
-our program. Therefore, we only need one instance of this class.
+The only design pattern we explicitly use in our implementation of Deadwood is Singleton. Our
+Board, XMLParser, Screen and Dice classes are Singletons. While none of these classes need to be
+Singletons, they ensure that our code is robust. We made Board a Singleton because only one board
+should exist during a game of Deadwood, with every participant interacting with that single
+board. A Singleton class makes sure that another board is not accidentally created at some point
+during execution. Additionally, we made XMLParser a Singleton because there is no need for more
+than one object that parses our XML files. This ensures that the data from the XML files is all
+contained in one spot, which also saves space. We made Screen a Singleton because only one screen
+needs to be active throughout the program. Similarly, we made Dice a Singleton because nothing
+about how rolling a dice works should change throughout the execution of our program. Therefore,
+we only need one instance of this class.
 
-We also use the MVC design pattern in our implementation, since it
-is worked into the structure of FXML (what we used to create our
-GUI). The FXML files and Screen class represent the View, our
-Deadwood and Menu classes represent the Controller, and the rest
-of our classes represent the Model. Using MVC ensures that state
-is separate from the user interface. Changes in data can affect
-the display, while changes in the display don’t have to affect the
-data.
+We also use the MVC design pattern in our implementation, since it is worked into the
+structure of FXML (what we used to create our GUI). The FXML files and Screen class represent the
+View, our Deadwood and Menu classes represent the Controller, and the rest of our classes
+represent the Model. Using MVC ensures that state is separate from the user interface. Changes in
+data can affect the display, while changes in the display don’t have to affect the data.
