@@ -1,5 +1,6 @@
 # Deadwood
 ### Implemented by Jamal Marri and Megan Theimer
+The board game Deadwood implemented as a fully functional Java game.
 
 ## Steps to compile:
 
